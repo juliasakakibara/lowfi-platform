@@ -5,12 +5,17 @@ import { menuScene } from "./scenes/menu.js";
 import { gameScene } from "./scenes/game.js";
 import { winScene } from "./scenes/win.js";
 import { gameoverScene } from "./scenes/gameover.js";
+import { isMobileUi, setupTouchControls } from "./ui/touchControls.js";
+
+const mobile = isMobileUi();
+const root = document.querySelector("#game-root");
 
 const k = kaboom({
   width: GAME.width,
   height: GAME.height,
+  root,
   stretch: true,
-  letterbox: true,
+  letterbox: !mobile,
   background: COLORS.sky,
   global: false,
   loadingScreen: true,
@@ -20,13 +25,13 @@ const k = kaboom({
 // Mesmo base do Vite (./ no GitHub Pages)
 k.loadRoot(import.meta.env.BASE_URL);
 
-
 k.scene("menu", () => menuScene(k));
 k.scene("game", () => gameScene(k));
 k.scene("win", (data) => winScene(k, data));
 k.scene("gameover", () => gameoverScene(k));
 
 loadGameAssets(k);
+setupTouchControls();
 
 let started = false;
 function startGame() {
@@ -35,7 +40,6 @@ function startGame() {
   document.getElementById("boot-msg")?.remove();
   k.go("menu");
 }
-
 
 k.onLoad(startGame);
 

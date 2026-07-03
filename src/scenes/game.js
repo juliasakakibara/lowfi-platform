@@ -11,8 +11,8 @@ import { shouldDamagePlayer, isStomping } from "../utils/collision.js";
 import { spawnStompDust } from "../utils/particles.js";
 import { UI } from "../ui/theme.js";
 import { addIconLabel } from "../ui/panel.js";
-import { addTouchControls } from "../ui/touchControls.js";
 import { TILE } from "../level/tiles.js";
+
 
 
 function createHud(k, getCoins, getLives) {
@@ -94,7 +94,6 @@ export function gameScene(k) {
   const startY = level1.ground[0].y;
   const player = createPlayer(k, startX, startY);
   setupPlayerControls(k, player);
-  addTouchControls(k);
 
   for (const e of level1.enemies) {
 

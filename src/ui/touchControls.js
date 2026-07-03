@@ -1,113 +1,67 @@
-import { GAME } from "../config.js";
 import { input } from "../input.js";
-import { UI } from "./theme.js";
 
-const BTN = 64;
-const MARGIN = 16;
-const GAP = 12;
-
-function isTouchDevice() {
-  return typeof navigator !== "undefined" && navigator.maxTouchPoints > 0;
+/** Celular real ou DevTools device mode — não desktop com trackpad. */
+export function isMobileUi() {
+  if (typeof navigator === "undefined" || typeof window === "undefined") {
+    return false;
+  }
+  const touch = navigator.maxTouchPoints > 0;
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const narrow = window.matchMedia("(max-width: 900px)").matches;
+  return touch && (coarse || narrow);
 }
 
-function addHoldButton(k, { x, y, label, onHold }) {
-  const btn = k.add([
-    k.rect(BTN, BTN),
+function bindHold(button, key) {
+  const set = (down) => {
+    input[key] = down;
+    button.classList.toggle("is-active", down);
+  };
 
-    k.pos(x, y),
-    k.anchor("botleft"),
-    k.color(...UI.panelBg),
-    k.opacity(0.45),
-    k.outline(2, k.rgb(...UI.panelBorder)),
-    k.area(),
-    k.fixed(),
-    k.z(200),
-  ]);
+  const onDown = (event) => {
+    event.preventDefault();
+    set(true);
+  };
+  const onUp = (event) => {
+    event.preventDefault();
+    set(false);
+  };
 
-  k.add([
-    k.text(label, { size: 28 }),
-    k.pos(x + BTN / 2, y - BTN / 2),
-    k.anchor("center"),
-    k.color(...UI.text),
-    k.fixed(),
-    k.z(201),
-  ]);
-
-  btn.onUpdate(() => {
-    const held = btn.isHovering() && k.isMouseDown();
-    onHold(held);
-    btn.opacity = held ? 0.7 : 0.45;
-  });
-
-  return btn;
+  button.addEventListener("pointerdown", onDown);
+  button.addEventListener("pointerup", onUp);
+  button.addEventListener("pointerleave", onUp);
+  button.addEventListener("pointercancel", onUp);
 }
-
-function addJumpButton(k, { x, y }) {
-  const btn = k.add([
-    k.rect(BTN + 16, BTN),
-
-    k.pos(x, y),
-    k.anchor("botright"),
-    k.color(...UI.panelBg),
-    k.opacity(0.45),
-    k.outline(2, k.rgb(...UI.panelBorder)),
-    k.area(),
-    k.fixed(),
-    k.z(200),
-  ]);
-
-  k.add([
-    k.text("Pular", { size: 18 }),
-    k.pos(x - (BTN + 16) / 2, y - BTN / 2),
-    k.anchor("center"),
-    k.color(...UI.text),
-    k.fixed(),
-    k.z(201),
-  ]);
-
-  let wasDown = false;
-  btn.onUpdate(() => {
-    const down = btn.isHovering() && k.isMouseDown();
-    if (down && !wasDown) {
-      input.jump = true;
-    }
-    wasDown = down;
-    btn.opacity = down ? 0.7 : 0.45;
-  });
-
-  return btn;
-}
-
 
 /**
- * Botões on-screen (só em dispositivos com touch).
- * Kaboom mapeia toque para mouse (isMouseDown / isHovering / onClick).
+ * Barra HTML abaixo do canvas (só mobile). Não desenha no mundo Kaboom.
  */
-export function addTouchControls(k) {
-  if (!isTouchDevice()) return;
+export function setupTouchControls() {
+  const app = document.getElementById("app");
+  const bar = document.getElementById("touch-bar");
+  if (!app || !bar || !isMobileUi()) return;
 
-  const bottom = GAME.height - MARGIN;
+  app.classList.add("is-mobile");
+  bar.hidden = false;
 
-  addHoldButton(k, {
-    x: MARGIN,
-    y: bottom,
-    label: "<",
-    onHold: (held) => {
-      input.left = held;
-    },
-  });
+  const left = bar.querySelector('[data-dir="left"]');
+  const right = bar.querySelector('[data-dir="right"]');
+  const jump = bar.querySelector('[data-action="jump"]');
 
-  addHoldButton(k, {
-    x: MARGIN + BTN + GAP,
-    y: bottom,
-    label: ">",
-    onHold: (held) => {
-      input.right = held;
-    },
-  });
+  if (left) bindHold(left, "left");
+  if (right) bindHold(right, "right");
 
-  addJumpButton(k, {
-    x: GAME.width - MARGIN,
-    y: bottom,
-  });
+  if (jump) {
+    jump.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      input.jump = true;
+      jump.classList.add("is-active");
+    });
+    const clearJump = (event) => {
+      event.preventDefault();
+      jump.classList.remove("is-active");
+    };
+    jump.addEventListener("pointerup", clearJump);
+    jump.addEventListener("pointerleave", clearJump);
+    jump.addEventListener("pointercancel", clearJump);
+  }
 }
