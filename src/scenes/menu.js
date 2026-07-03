@@ -4,12 +4,14 @@ import { addPanel, addTitle, addBodyText } from "../ui/panel.js";
 import { CHAR } from "../level/tiles.js";
 
 export function menuScene(k) {
-  addPanel(k, k.center().x - 230, 70, 460, 300);
+  const cx = k.center().x;
+
+  addPanel(k, cx - 230, 60, 460, 320);
 
   if (ASSETS.customMenuBanner) {
     k.add([
       k.sprite("menu-banner"),
-      k.pos(k.center().x, 90),
+      k.pos(cx, 80),
       k.anchor("top"),
       k.scale(0.8),
       k.fixed(),
@@ -17,24 +19,26 @@ export function menuScene(k) {
     ]);
   }
 
+  addTitle(k, "Stick Man Run", 85);
+  addBodyText(k, "Um presente especial para voce", 140, {
+    size: UI.subtitleSize,
+  });
+
+  // Personagem centralizado abaixo do subtítulo
   k.add([
     k.sprite("characters", { frame: CHAR.player }),
-    k.pos(k.center().x - 170, 300),
-    k.anchor("bot"),
-    k.scale(2),
+    k.pos(cx, 210),
+    k.anchor("center"),
+    k.scale(2.2),
     k.fixed(),
     k.z(2),
   ]);
 
-  addTitle(k, "Stick Man Run", 95);
-  addBodyText(k, "Um presente especial para voce", 150, {
-    size: UI.subtitleSize,
-  });
-  addBodyText(k, "Pressione ESPACO para comecar", 220, {
+  addBodyText(k, "Pressione ESPACO para comecar", 260, {
     size: UI.subtitleSize,
     color: UI.text,
   });
-  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 280, {
+  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 300, {
     size: UI.smallSize,
   });
 

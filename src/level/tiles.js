@@ -6,6 +6,9 @@ export const PLATFORM_ROWS = 1;
 
 export const PLATFORM_HEIGHT = PLATFORM_ROWS * TILE_SIZE;
 
+/** Chão principal encosta na base da tela (450 - 18) */
+export const GROUND_Y = 432;
+
 /** Frames na sheet de tiles (índice = row * 20 + col) */
 export const TILE = {
   grassLeft: 0,

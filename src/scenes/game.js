@@ -9,12 +9,17 @@ import { playSound } from "../utils/audio.js";
 import { shouldDamagePlayer, isStomping } from "../utils/collision.js";
 import { spawnStompDust } from "../utils/particles.js";
 import { UI } from "../ui/theme.js";
+import { addIconLabel } from "../ui/panel.js";
 import { TILE } from "../level/tiles.js";
 
 function createHud(k, getCoins, getLives) {
+  const panelY = 8;
+  const panelH = 44;
+  const rowY = panelY + (panelH - 18 * 1.3) / 2;
+
   k.add([
-    k.rect(GAME.width - 20, 44),
-    k.pos(10, 8),
+    k.rect(GAME.width - 20, panelH),
+    k.pos(10, panelY),
     k.color(...UI.panelBg),
     k.opacity(UI.panelOpacity),
     k.outline(2, k.rgb(...UI.panelBorder)),
@@ -22,30 +27,27 @@ function createHud(k, getCoins, getLives) {
     k.z(99),
   ]);
 
-  k.add([
-    k.sprite("tiles", { frame: TILE.coin }),
-    k.pos(24, 16),
-    k.scale(1.3),
-    k.fixed(),
-    k.z(100),
-  ]);
-
-  const coinLabel = k.add([
-    k.text("0", { size: 20 }),
-    k.pos(50, 16),
-    k.color(...UI.text),
-    k.fixed(),
-    k.z(100),
-  ]);
+  const coinLabel = addIconLabel(k, {
+    frame: TILE.coin,
+    text: "0",
+    x: 24,
+    y: rowY,
+    iconScale: 1.3,
+    fontSize: 20,
+    color: UI.text,
+    z: 100,
+  });
 
   const hearts = [];
+  const heartScale = 1.2;
+  const heartSize = 18 * heartScale;
   for (let i = 0; i < GAME.maxLives; i++) {
     hearts.push(
       k.add([
         k.sprite("tiles", { frame: TILE.heart }),
-        k.pos(GAME.width - 28 - i * 24, 14),
-        k.anchor("topright"),
-        k.scale(1.2),
+        k.pos(GAME.width - 28 - i * (heartSize + 4), rowY + heartSize / 2),
+        k.anchor("center"),
+        k.scale(heartScale),
         k.fixed(),
         k.z(100),
       ]),
@@ -67,12 +69,11 @@ function createHud(k, getCoins, getLives) {
 export function gameScene(k) {
   k.setGravity(GAME.gravity);
 
-  // Decoração de fundo (sem colisão)
   for (let i = 0; i < 4; i++) {
     k.add([
       k.sprite("bg-tiles", { frame: i % 4 }),
       k.pos(200 + i * 280, 80 + (i % 2) * 30),
-      k.opacity(0.35),
+      k.opacity(0.25),
       k.scale(2),
       k.z(-5),
     ]);
@@ -162,13 +163,4 @@ export function gameScene(k) {
       player.pos = k.vec2(startX, startY);
     }
   });
-
-  k.add([
-    k.text("Chegue na bandeirinha!", { size: UI.smallSize }),
-    k.pos(GAME.width / 2, GAME.height - 24),
-    k.anchor("center"),
-    k.color(...UI.textMuted),
-    k.fixed(),
-    k.z(100),
-  ]);
 }

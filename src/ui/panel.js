@@ -33,3 +33,49 @@ export function addBodyText(k, text, y, opts = {}) {
     k.z(opts.z ?? 2),
   ]);
 }
+
+/**
+ * Ícone (frame da sheet tiles) + texto na mesma linha, alinhados ao centro vertical.
+ * Se centerX for true, o grupo fica centrado em x.
+ * Retorna o label de texto (para atualizar).
+ */
+export function addIconLabel(k, opts) {
+  const {
+    frame,
+    text,
+    x,
+    y,
+    centerX = false,
+    iconScale = 1.3,
+    fontSize = 20,
+    color = UI.text,
+    z = 100,
+  } = opts;
+
+  const iconSize = 18 * iconScale;
+  const gap = 8;
+  // Largura aproximada do texto (fonte monoespaçada do Kaboom ~0.6 * size por char)
+  const textWidth = text.length * fontSize * 0.55;
+  const totalWidth = iconSize + gap + textWidth;
+  const startX = centerX ? x - totalWidth / 2 : x;
+
+  k.add([
+    k.sprite("tiles", { frame }),
+    k.pos(startX, y + iconSize / 2),
+    k.anchor("center"),
+    k.scale(iconScale),
+    k.fixed(),
+    k.z(z),
+  ]);
+
+  const label = k.add([
+    k.text(text, { size: fontSize }),
+    k.pos(startX + iconSize + gap, y + iconSize / 2),
+    k.anchor("left"),
+    k.color(...color),
+    k.fixed(),
+    k.z(z),
+  ]);
+
+  return label;
+}
