@@ -75,17 +75,13 @@ npm run build
 npm run preview
 ```
 
-## Deploy (GitHub Pages)
+## Deploy (Vercel — gratuito)
 
-1. Crie um repositório no GitHub e envie este código para a branch `main`.
-2. Em **Settings → Pages**, defina **Source** como **GitHub Actions**.
-3. O workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) publica automaticamente a cada push em `main`.
+O deploy é feito pela **Vercel** (plano Hobby gratuito). Não usamos GitHub Actions (evita limite de minutos/billing da conta GitHub).
 
-> **Nota:** avisos `Unable to resolve action` no painel Problems do IDE são do linter local (sem acesso ao Marketplace). O workflow usa SHAs fixos e funciona no GitHub Actions.
-
-## Deploy (Vercel)
-
-Importe o repositório em [vercel.com](https://vercel.com) — Framework: Vite, Output: `dist`.
+1. Importe o repositório em [vercel.com](https://vercel.com) (login com GitHub).
+2. Framework: **Vite**, Build: `npm run build`, Output: `dist`.
+3. Cada push em `main` gera um deploy automático na Vercel.
 
 ## Controles
 
