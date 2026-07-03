@@ -1,15 +1,22 @@
 /** Kenney Pixel Platformer — tiles 18×18, sheet 20×9 */
 export const TILE_SIZE = 18;
 
-/** Uma fileira: cada tile já tem grama em cima e terra embaixo */
 export const PLATFORM_ROWS = 1;
-
 export const PLATFORM_HEIGHT = PLATFORM_ROWS * TILE_SIZE;
 
-/** Chão principal encosta na base da tela (450 - 18) */
+/**
+ * Chão do personagem (base da tela).
+ * 432 = 450 - 18 — tiles encostam no fundo, personagem anda em cima (z alto).
+ */
 export const GROUND_Y = 432;
 
-/** Frames na sheet de tiles (índice = row * 20 + col) */
+/**
+ * Altura em que os inimigos flutuam (acima do chão do player).
+ * 72px = 4 tiles acima da superfície.
+ */
+export const ENEMY_FLOAT_Y = GROUND_Y - 72;
+
+/** Frames na sheet de tiles */
 export const TILE = {
   grassLeft: 0,
   grassMid: 1,
@@ -19,7 +26,7 @@ export const TILE = {
   heart: 44,
 };
 
-/** Frames na sheet de characters (índice = row * 9 + col) */
+/** Frames na sheet de characters */
 export const CHAR = {
   player: 0,
   enemy: 9,

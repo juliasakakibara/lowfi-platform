@@ -1,10 +1,13 @@
-import { TILE_SIZE, PLATFORM_ROWS, PLATFORM_HEIGHT, pickPlatformTile } from "./tiles.js";
+import {
+  TILE_SIZE,
+  PLATFORM_ROWS,
+  PLATFORM_HEIGHT,
+  pickPlatformTile,
+} from "./tiles.js";
 
 /**
- * Cada tile = sprite + colisão no mesmo objeto (topleft).
- * Buraco visual = buraco real.
- *
- * Segmento: { x, y, tiles } — x e y múltiplos de TILE_SIZE.
+ * Só o chão do personagem: tiles de grama com colisão.
+ * Sem preenchimento marrom — céu azul nos buracos e abaixo das plataformas elevadas.
  */
 export function spawnGround(k, segments) {
   for (const g of segments) {

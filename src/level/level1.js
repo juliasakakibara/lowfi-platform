@@ -1,48 +1,43 @@
-import { TILE_SIZE, GROUND_Y } from "./tiles.js";
+import { TILE_SIZE, GROUND_Y, ENEMY_FLOAT_Y } from "./tiles.js";
 
-// Grade 18px. gap = next.x - (x + tiles * 18) = 54 (3 tiles)
-// GROUND_Y = 432 (encosta no fundo da tela)
+// Chão só para o personagem (GROUND_Y). Inimigos flutuam em ENEMY_FLOAT_Y.
+// Gaps de 54px (3 tiles) entre segmentos do chão.
 export const level1 = {
   width: 3024,
   ground: [
-    // end 702
-    { x: 0, y: GROUND_Y, tiles: 39 },
-    // end 1098, gap 54
-    { x: 756, y: GROUND_Y, tiles: 19 },
-    // end 1368, gap 54
-    { x: 1152, y: GROUND_Y - 36, tiles: 12 },
-    // end 1728, gap 54
-    { x: 1422, y: GROUND_Y, tiles: 17 },
+    // end 720
+    { x: 0, y: GROUND_Y, tiles: 40 },
+    // end 1134, gap 54
+    { x: 774, y: GROUND_Y, tiles: 20 },
+    // end 1548, gap 54
+    { x: 1188, y: GROUND_Y, tiles: 20 },
     // end 1962, gap 54
-    { x: 1782, y: GROUND_Y - 72, tiles: 10 },
-    // end 2268, gap 54
-    { x: 2016, y: GROUND_Y, tiles: 14 },
-    // end 2520, gap 54
-    { x: 2322, y: GROUND_Y - 36, tiles: 11 },
+    { x: 1602, y: GROUND_Y, tiles: 20 },
+    // end 2376, gap 54
+    { x: 2016, y: GROUND_Y, tiles: 20 },
     // end 2970
-    { x: 2574, y: GROUND_Y, tiles: 22 },
+    { x: 2430, y: GROUND_Y, tiles: 30 },
   ],
+  // Inimigos flutuam acima do chão (não andam nas plataformas)
   enemies: [
-    { x: 306, patrol: [198, 486], y: GROUND_Y },
-    { x: 882, patrol: [774, 1044], y: GROUND_Y },
-    { x: 1206, patrol: [1152, 1332], y: GROUND_Y - 36 },
-    { x: 1494, patrol: [1440, 1692], y: GROUND_Y },
-    { x: 1818, patrol: [1782, 1944], y: GROUND_Y - 72 },
-    { x: 2070, patrol: [2016, 2232], y: GROUND_Y },
-    { x: 2358, patrol: [2322, 2484], y: GROUND_Y - 36 },
-    { x: 2700, patrol: [2592, 2916], y: GROUND_Y },
+    { x: 306, patrol: [180, 540], y: ENEMY_FLOAT_Y },
+    { x: 900, patrol: [792, 1080], y: ENEMY_FLOAT_Y },
+    { x: 1300, patrol: [1206, 1512], y: ENEMY_FLOAT_Y },
+    { x: 1720, patrol: [1620, 1926], y: ENEMY_FLOAT_Y },
+    { x: 2140, patrol: [2034, 2340], y: ENEMY_FLOAT_Y },
+    { x: 2600, patrol: [2466, 2880], y: ENEMY_FLOAT_Y },
   ],
   collectibles: [
-    { x: 216, y: GROUND_Y - 36 },
-    { x: 504, y: GROUND_Y - 36 },
-    { x: 900, y: GROUND_Y - 36 },
-    { x: 1224, y: GROUND_Y - 72 },
-    { x: 1530, y: GROUND_Y - 36 },
-    { x: 1836, y: GROUND_Y - 108 },
-    { x: 2106, y: GROUND_Y - 36 },
-    { x: 2376, y: GROUND_Y - 72 },
-    { x: 2664, y: GROUND_Y - 36 },
-    { x: 2880, y: GROUND_Y - 36 },
+    { x: 216, y: GROUND_Y - 54 },
+    { x: 504, y: GROUND_Y - 54 },
+    { x: 900, y: GROUND_Y - 90 },
+    { x: 1300, y: GROUND_Y - 54 },
+    { x: 1720, y: GROUND_Y - 90 },
+    { x: 1900, y: GROUND_Y - 54 },
+    { x: 2140, y: GROUND_Y - 54 },
+    { x: 2300, y: GROUND_Y - 90 },
+    { x: 2600, y: GROUND_Y - 54 },
+    { x: 2800, y: GROUND_Y - 54 },
   ],
   flag: { x: 2916, y: GROUND_Y },
 };
