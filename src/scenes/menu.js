@@ -29,7 +29,7 @@ export function menuScene(k) {
   // Personagem centralizado abaixo do subtítulo
   k.add([
     k.sprite("characters", { frame: CHAR.player }),
-    k.pos(cx, 220),
+    k.pos(cx, 230),
     k.anchor("center"),
     k.scale(2.2),
     k.fixed(),

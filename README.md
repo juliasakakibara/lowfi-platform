@@ -77,11 +77,20 @@ npm run preview
 
 ## Deploy (GitHub Pages)
 
-Cada push em `main` publica o jogo automaticamente via GitHub Actions.
+O site publicado fica na pasta `docs/` (sem GitHub Actions — a conta está com Actions bloqueado por billing).
 
 **Link do jogo:** https://juliasakakibara.github.io/lowfi-platform/
 
-Se a página ainda não abrir, em **Settings → Pages** do repositório escolha **Source: GitHub Actions**.
+Em **Settings → Pages**: Source = **Deploy from a branch**, Branch = **main**, pasta = **/docs**.
+
+Para republicar depois de mudar o código:
+
+```bash
+npm run build
+git add docs
+git commit -m "deploy: atualiza GitHub Pages"
+git push
+```
 
 ## Controles
 
