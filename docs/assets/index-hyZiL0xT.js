@@ -3697,6 +3697,14 @@ function loadGameAssets(k2) {
     sliceX: 9,
     sliceY: 3
   });
+  k2.loadSprite("bruno", "assets/custom/bruno.png", {
+    sliceX: 4,
+    sliceY: 1,
+    anims: {
+      idle: 0,
+      walk: { from: 0, to: 3, speed: 10, loop: true }
+    }
+  });
   k2.loadSprite("bg-tiles", "assets/pixel-platformer/backgrounds.png", {
     sliceX: 8,
     sliceY: 3
@@ -3786,28 +3794,6 @@ function addIconLabel(k2, opts) {
   ]);
   return label;
 }
-const TILE_SIZE = 18;
-const PLATFORM_ROWS = 1;
-const GROUND_Y = 432;
-const ENEMY_FLOAT_Y = GROUND_Y - 72;
-const TILE = {
-  grassLeft: 0,
-  grassMid: 1,
-  grassRight: 2,
-  flag: 111,
-  coin: 152,
-  heart: 44
-};
-const CHAR = {
-  player: 0,
-  enemy: 9
-};
-function pickPlatformTile(col, cols) {
-  if (cols === 1) return TILE.grassMid;
-  if (col === 0) return TILE.grassLeft;
-  if (col === cols - 1) return TILE.grassRight;
-  return TILE.grassMid;
-}
 function menuScene(k2) {
   const cx = k2.center().x;
   addPanel(k2, cx - 230, 60, 460, 320);
@@ -3817,7 +3803,7 @@ function menuScene(k2) {
     width: 400
   });
   k2.add([
-    k2.sprite("characters", { frame: CHAR.player }),
+    k2.sprite("bruno", { anim: "walk" }),
     k2.pos(cx, 230),
     k2.anchor("center"),
     k2.scale(2.2),
@@ -3835,6 +3821,27 @@ function menuScene(k2) {
   k2.onKeyPress("space", () => {
     k2.go("game");
   });
+}
+const TILE_SIZE = 18;
+const PLATFORM_ROWS = 1;
+const GROUND_Y = 432;
+const ENEMY_FLOAT_Y = GROUND_Y - 72;
+const TILE = {
+  grassLeft: 0,
+  grassMid: 1,
+  grassRight: 2,
+  flag: 111,
+  coin: 152,
+  heart: 44
+};
+const CHAR = {
+  enemy: 9
+};
+function pickPlatformTile(col, cols) {
+  if (cols === 1) return TILE.grassMid;
+  if (col === 0) return TILE.grassLeft;
+  if (col === cols - 1) return TILE.grassRight;
+  return TILE.grassMid;
 }
 const level1 = {
   width: 3024,
@@ -3929,7 +3936,7 @@ const H$1 = 24;
 function createPlayer(k2, x, y) {
   const player = k2.add([
     k2.pos(x, y),
-    k2.sprite("characters", { frame: CHAR.player }),
+    k2.sprite("bruno", { anim: "idle" }),
     // Shape com origem no canto superior esquerdo; anchor "bot" coloca a base em pos.y
     k2.area({ shape: new k2.Rect(k2.vec2(0, 0), W$1, H$1) }),
     k2.body(),
@@ -3954,6 +3961,11 @@ function createPlayer(k2, x, y) {
       player.facing = moveX;
       player.move(moveX * GAME.playerSpeed, 0);
       player.flipX = moveX < 0;
+      if (player.curAnim() !== "walk") {
+        player.play("walk");
+      }
+    } else if (player.curAnim() !== "idle") {
+      player.play("idle");
     }
     if (player.invincible) {
       player.opacity = Math.floor(k2.time() * 10) % 2 === 0 ? 0.45 : 1;
