@@ -20,9 +20,8 @@ export const COLORS = {
 };
 
 export const BIRTHDAY_MESSAGE = {
-  title: "Feliz aniversário, amor!",
+  title: "Feliz aniversário, xuxu!!",
   lines: [
-    "Você chegou na linha de chegada...",
     "A surpresa te espera no sábado às 19h!",
     "Te amo ♥",
   ],
