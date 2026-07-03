@@ -25,7 +25,12 @@ export function addTitle(k, text, y, opts = {}) {
 
 export function addBodyText(k, text, y, opts = {}) {
   return k.add([
-    k.text(text, { size: opts.size ?? UI.bodySize }),
+    k.text(text, {
+      size: opts.size ?? UI.bodySize,
+      width: opts.width,
+      align: opts.align ?? "center",
+      lineSpacing: opts.lineSpacing ?? 6,
+    }),
     k.pos(k.center().x, y),
     k.anchor("top"),
     k.color(...(opts.color ?? UI.textMuted)),
@@ -33,6 +38,7 @@ export function addBodyText(k, text, y, opts = {}) {
     k.z(opts.z ?? 2),
   ]);
 }
+
 
 /**
  * Ícone (frame da sheet tiles) + texto na mesma linha, alinhados ao centro vertical.

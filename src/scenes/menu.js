@@ -19,28 +19,32 @@ export function menuScene(k) {
     ]);
   }
 
-  addTitle(k, "Stick Man Run", 85);
-  addBodyText(k, "Um presente especial para voce", 140, {
+  addTitle(k, "SUPER BRUNO BROS.", 85);
+  // Largura do painel (460) menos margem — quebra em 2 linhas
+  addBodyText(k, "Colete as moedas e desarme os inimigos para descobrir seu presente!", 130, {
     size: UI.subtitleSize,
+    width: 400,
   });
 
   // Personagem centralizado abaixo do subtítulo
   k.add([
     k.sprite("characters", { frame: CHAR.player }),
-    k.pos(cx, 210),
+    k.pos(cx, 220),
     k.anchor("center"),
     k.scale(2.2),
     k.fixed(),
     k.z(2),
   ]);
 
-  addBodyText(k, "Pressione ESPACO para comecar", 260, {
+  addBodyText(k, "Pressione ESPACO para comecar", 270, {
     size: UI.subtitleSize,
     color: UI.text,
   });
-  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 300, {
+  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 310, {
     size: UI.smallSize,
+    width: 400,
   });
+
 
   k.onKeyPress("space", () => {
     k.go("game");
