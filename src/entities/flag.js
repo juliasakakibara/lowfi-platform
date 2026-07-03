@@ -1,13 +1,19 @@
-import { ASSETS } from "../config.js";
+import { COLORS } from "../config.js";
 
 export function createFlag(k, x, y, onReach) {
-  const flagSprite = ASSETS.useCustomFlag ? "flag-custom" : "flag";
-
   k.add([
     k.pos(x, y),
-    k.sprite(flagSprite),
+    k.rect(4, 80),
+    k.color(...COLORS.flagPole),
     k.anchor("bot"),
-    k.scale(1.2),
+    k.z(2),
+  ]);
+
+  k.add([
+    k.pos(x + 4, y - 70),
+    k.rect(40, 28),
+    k.color(255, 50, 50),
+    k.anchor("left"),
     k.z(2),
   ]);
 

@@ -13,7 +13,7 @@ const k = kaboom({
   letterbox: true,
   background: COLORS.sky,
   global: false,
-  loadingScreen: true,
+  loadingScreen: false,
   crisp: true,
 });
 
@@ -25,10 +25,7 @@ k.scene("win", (data) => winScene(k, data));
 k.scene("gameover", () => gameoverScene(k));
 
 loadGameAssets(k);
-
-k.onLoad(() => {
-  k.go("menu");
-});
+k.go("menu");
 
 k.canvas.focus();
 k.canvas.addEventListener("click", () => k.canvas.focus());

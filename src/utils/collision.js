@@ -1,5 +1,5 @@
 const PLAYER = { halfW: 6, height: 32 };
-const ENEMY = { halfW: 8, height: 26 };
+const ENEMY = { halfW: 10, height: 24 };
 
 export function shouldDamagePlayer(player, enemy) {
   const pLeft = player.pos.x - PLAYER.halfW;

@@ -4,7 +4,7 @@ import { createPlayer, setupPlayerControls, knockbackPlayer } from "../entities/
 import { createEnemy } from "../entities/enemy.js";
 import { createCollectible } from "../entities/collectible.js";
 import { createFlag } from "../entities/flag.js";
-import { spawnGroundTiles, createParallax } from "../level/terrain.js";
+import { spawnGround } from "../level/terrain.js";
 import { playSound } from "../utils/audio.js";
 import { shouldDamagePlayer, isStomping } from "../utils/collision.js";
 import { spawnStompDust } from "../utils/particles.js";
@@ -14,63 +14,46 @@ function createHud(k, getCoins, getLives) {
     k.rect(GAME.width - 20, 44),
     k.pos(10, 8),
     k.color(255, 255, 255),
-    k.opacity(0.75),
-    k.outline(2, 255, 200, 100),
+    k.opacity(0.85),
+    k.outline(2, k.rgb(50, 50, 50)),
     k.fixed(),
     k.z(99),
   ]);
 
-  k.add([
-    k.sprite("coin-icon"),
-    k.pos(24, 20),
-    k.scale(1.2),
-    k.fixed(),
-    k.z(100),
-  ]);
-
   const coinLabel = k.add([
-    k.text("0", { size: 22 }),
-    k.pos(46, 14),
+    k.text("Moedas: 0", { size: 20 }),
+    k.pos(24, 18),
     k.color(40, 40, 40),
     k.fixed(),
     k.z(100),
   ]);
 
-  const hearts = [];
-  for (let i = 0; i < GAME.maxLives; i++) {
-    const heart = k.add([
-      k.sprite("heart"),
-      k.pos(GAME.width - 24 - i * 22, 16),
-      k.scale(1.1),
-      k.anchor("topright"),
-      k.fixed(),
-      k.z(100),
-    ]);
-    hearts.push(heart);
-  }
+  const livesLabel = k.add([
+    k.text("", { size: 20 }),
+    k.pos(GAME.width - 24, 18),
+    k.anchor("topright"),
+    k.color(200, 50, 50),
+    k.fixed(),
+    k.z(100),
+  ]);
 
   function refresh() {
-    coinLabel.text = `${getCoins()}`;
-    const lives = getLives();
-    hearts.forEach((h, i) => {
-      h.opacity = i < lives ? 1 : 0.2;
-    });
+    coinLabel.text = `Moedas: ${getCoins()}`;
+    livesLabel.text = "♥".repeat(getLives());
   }
 
   refresh();
-  return { refresh, coinLabel };
+  return { refresh };
 }
 
 export function gameScene(k) {
   k.setGravity(GAME.gravity);
 
-  const parallax = createParallax(k);
-
   let lives = GAME.maxLives;
   let coins = 0;
   let gameEnded = false;
 
-  spawnGroundTiles(k, level1.ground);
+  spawnGround(k, level1.ground);
 
   const startX = 80;
   const startY = level1.ground[0].y;
@@ -78,7 +61,7 @@ export function gameScene(k) {
   setupPlayerControls(k, player);
 
   for (const e of level1.enemies) {
-    createEnemy(k, e.x, e.y ?? level1.ground[0].y, e.patrol);
+    createEnemy(k, e.x, e.y, e.patrol);
   }
 
   const hud = createHud(k, () => coins, () => lives);
@@ -144,7 +127,6 @@ export function gameScene(k) {
       level1.width - GAME.width / 2,
     );
     k.camPos(targetX, GAME.height / 2);
-    parallax.update(targetX);
 
     if (player.pos.y > GAME.height + 100) {
       handlePlayerHit({ pos: { x: player.pos.x } });

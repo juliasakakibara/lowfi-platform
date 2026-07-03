@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sounds.js && node scripts/generate-assets.js",
+    "prebuild": "node scripts/generate-sounds.js",
     "build": "vite build",
     "preview": "vite preview"
   },

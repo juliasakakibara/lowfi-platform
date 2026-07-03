@@ -11,10 +11,9 @@ export function spawnCoinBurst(k, pos) {
     const color = colors[i % colors.length];
 
     k.add([
-      k.pos(pos),
-      k.sprite("particle"),
+      k.pos(pos.x, pos.y),
+      k.rect(4, 4),
       k.color(...color),
-      k.scale(0.6 + Math.random() * 0.4),
       k.anchor("center"),
       k.z(20),
       k.lifespan(0.4, { fade: 0.2 }),
@@ -33,9 +32,8 @@ export function spawnStompDust(k, pos) {
   for (let i = 0; i < 5; i++) {
     k.add([
       k.pos(pos.x + (Math.random() - 0.5) * 20, pos.y),
-      k.sprite("particle"),
+      k.rect(5, 5),
       k.color(220, 220, 210),
-      k.scale(0.8),
       k.anchor("center"),
       k.z(15),
       k.opacity(0.8),

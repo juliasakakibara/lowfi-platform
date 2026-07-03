@@ -1,4 +1,4 @@
-import { GAME } from "../config.js";
+import { GAME, COLORS } from "../config.js";
 import { playSound } from "../utils/audio.js";
 
 export function createPlayer(k, x, y) {
@@ -7,8 +7,6 @@ export function createPlayer(k, x, y) {
     k.area({ shape: new k.Rect(k.vec2(-6, -32), 12, 32) }),
     k.body(),
     k.anchor("bot"),
-    k.sprite("player", { anim: "idle" }),
-    k.scale(0.85),
     k.z(10),
     "player",
     {
@@ -16,6 +14,41 @@ export function createPlayer(k, x, y) {
       invincible: false,
       facing: 1,
     },
+  ]);
+
+  const head = player.add([
+    k.circle(8),
+    k.pos(0, -40),
+    k.color(...COLORS.player),
+    k.anchor("center"),
+  ]);
+
+  const body = player.add([
+    k.rect(4, 20),
+    k.pos(0, -28),
+    k.color(...COLORS.player),
+    k.anchor("bot"),
+  ]);
+
+  player.add([
+    k.rect(20, 3),
+    k.pos(0, -24),
+    k.color(...COLORS.player),
+    k.anchor("center"),
+  ]);
+
+  player.add([
+    k.rect(3, 14),
+    k.pos(-6, -14),
+    k.color(...COLORS.player),
+    k.anchor("bot"),
+  ]);
+
+  player.add([
+    k.rect(3, 14),
+    k.pos(6, -14),
+    k.color(...COLORS.player),
+    k.anchor("bot"),
   ]);
 
   player.onUpdate(() => {
@@ -28,22 +61,14 @@ export function createPlayer(k, x, y) {
     if (moveX !== 0) {
       player.facing = moveX;
       player.move(moveX * GAME.playerSpeed, 0);
-      player.flipX = moveX < 0;
     }
 
-    if (!player.grounded) {
-      player.play("jump");
-    } else if (moveX !== 0) {
-      player.play("run");
-    } else {
-      player.play("idle");
-    }
-
-    if (player.invincible) {
-      player.opacity = Math.floor(k.time() * 10) % 2 === 0 ? 0.5 : 1;
-    } else {
-      player.opacity = 1;
-    }
+    const flash =
+      player.invincible && Math.floor(k.time() * 10) % 2 === 0
+        ? k.rgb(255, 100, 100)
+        : k.rgb(...COLORS.player);
+    head.color = flash;
+    body.color = flash;
   });
 
   return player;
