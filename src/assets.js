@@ -11,6 +11,17 @@ export function loadGameAssets(k) {
     sliceY: 3,
   });
 
+  // Player custom: 4 frames × 24×24 (sheet 96×24)
+  k.loadSprite("bruno", "assets/custom/bruno.png", {
+    sliceX: 4,
+    sliceY: 1,
+    anims: {
+      idle: 0,
+      walk: { from: 0, to: 3, speed: 10, loop: true },
+    },
+  });
+
+
   k.loadSprite("bg-tiles", "assets/pixel-platformer/backgrounds.png", {
     sliceX: 8,
     sliceY: 3,

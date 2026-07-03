@@ -1,7 +1,6 @@
 import { ASSETS } from "../config.js";
 import { UI } from "../ui/theme.js";
 import { addPanel, addTitle, addBodyText } from "../ui/panel.js";
-import { CHAR } from "../level/tiles.js";
 
 export function menuScene(k) {
   const cx = k.center().x;
@@ -28,13 +27,14 @@ export function menuScene(k) {
 
   // Personagem centralizado abaixo do subtítulo
   k.add([
-    k.sprite("characters", { frame: CHAR.player }),
+    k.sprite("bruno", { anim: "walk" }),
     k.pos(cx, 230),
     k.anchor("center"),
     k.scale(2.2),
     k.fixed(),
     k.z(2),
   ]);
+
 
   addBodyText(k, "Pressione ESPACO para comecar", 270, {
     size: UI.subtitleSize,

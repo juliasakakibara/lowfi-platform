@@ -1,5 +1,4 @@
 import { GAME } from "../config.js";
-import { CHAR } from "../level/tiles.js";
 import { playSound } from "../utils/audio.js";
 
 /** Frame 24×24 — Rect (0,0,w,h) + anchor bot: Kaboom alinha a base em pos.y */
@@ -9,7 +8,7 @@ const H = 24;
 export function createPlayer(k, x, y) {
   const player = k.add([
     k.pos(x, y),
-    k.sprite("characters", { frame: CHAR.player }),
+    k.sprite("bruno", { anim: "idle" }),
     // Shape com origem no canto superior esquerdo; anchor "bot" coloca a base em pos.y
     k.area({ shape: new k.Rect(k.vec2(0, 0), W, H) }),
     k.body(),
@@ -38,6 +37,11 @@ export function createPlayer(k, x, y) {
       player.facing = moveX;
       player.move(moveX * GAME.playerSpeed, 0);
       player.flipX = moveX < 0;
+      if (player.curAnim() !== "walk") {
+        player.play("walk");
+      }
+    } else if (player.curAnim() !== "idle") {
+      player.play("idle");
     }
 
     if (player.invincible) {
