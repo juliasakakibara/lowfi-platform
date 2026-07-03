@@ -17,7 +17,8 @@ const k = kaboom({
   crisp: true,
 });
 
-k.loadRoot("./");
+// Paths absolutos a partir da raiz do site (Vercel)
+k.loadRoot("/");
 
 k.scene("menu", () => menuScene(k));
 k.scene("game", () => gameScene(k));
@@ -26,9 +27,19 @@ k.scene("gameover", () => gameoverScene(k));
 
 loadGameAssets(k);
 
-k.onLoad(() => {
+let started = false;
+function startGame() {
+  if (started) return;
+  started = true;
   k.go("menu");
-});
+}
 
-k.canvas.focus();
-k.canvas.addEventListener("click", () => k.canvas.focus());
+k.onLoad(startGame);
+
+// Fallback: se onLoad não disparar (rede/asset), entra no menu mesmo assim
+k.wait(3, startGame);
+
+if (k.canvas) {
+  k.canvas.focus();
+  k.canvas.addEventListener("click", () => k.canvas.focus());
+}

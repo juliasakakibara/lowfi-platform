@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "./",
+  // Paths absolutos — mais confiáveis na Vercel do que "./"
+  base: "/",
 });
+
