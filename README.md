@@ -75,13 +75,13 @@ npm run build
 npm run preview
 ```
 
-## Deploy (Vercel — gratuito)
+## Deploy (GitHub Pages)
 
-O deploy é feito pela **Vercel** (plano Hobby gratuito). Não usamos GitHub Actions (evita limite de minutos/billing da conta GitHub).
+Cada push em `main` publica o jogo automaticamente via GitHub Actions.
 
-1. Importe o repositório em [vercel.com](https://vercel.com) (login com GitHub).
-2. Framework: **Vite**, Build: `npm run build`, Output: `dist`.
-3. Cada push em `main` gera um deploy automático na Vercel.
+**Link do jogo:** https://juliasakakibara.github.io/lowfi-platform/
+
+Se a página ainda não abrir, em **Settings → Pages** do repositório escolha **Source: GitHub Actions**.
 
 ## Controles
 

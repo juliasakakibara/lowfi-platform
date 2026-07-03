@@ -17,8 +17,9 @@ const k = kaboom({
   crisp: true,
 });
 
-// Paths absolutos a partir da raiz do site (Vercel)
-k.loadRoot("/");
+// Mesmo base do Vite (./ no GitHub Pages)
+k.loadRoot(import.meta.env.BASE_URL);
+
 
 k.scene("menu", () => menuScene(k));
 k.scene("game", () => gameScene(k));
