@@ -8,38 +8,56 @@ import { spawnGround } from "../level/terrain.js";
 import { playSound } from "../utils/audio.js";
 import { shouldDamagePlayer, isStomping } from "../utils/collision.js";
 import { spawnStompDust } from "../utils/particles.js";
+import { UI } from "../ui/theme.js";
+import { TILE } from "../level/tiles.js";
 
 function createHud(k, getCoins, getLives) {
   k.add([
     k.rect(GAME.width - 20, 44),
     k.pos(10, 8),
-    k.color(255, 255, 255),
-    k.opacity(0.85),
-    k.outline(2, k.rgb(50, 50, 50)),
+    k.color(...UI.panelBg),
+    k.opacity(UI.panelOpacity),
+    k.outline(2, k.rgb(...UI.panelBorder)),
     k.fixed(),
     k.z(99),
   ]);
 
-  const coinLabel = k.add([
-    k.text("Moedas: 0", { size: 20 }),
-    k.pos(24, 18),
-    k.color(40, 40, 40),
+  k.add([
+    k.sprite("tiles", { frame: TILE.coin }),
+    k.pos(24, 16),
+    k.scale(1.3),
     k.fixed(),
     k.z(100),
   ]);
 
-  const livesLabel = k.add([
-    k.text("", { size: 20 }),
-    k.pos(GAME.width - 24, 18),
-    k.anchor("topright"),
-    k.color(200, 50, 50),
+  const coinLabel = k.add([
+    k.text("0", { size: 20 }),
+    k.pos(50, 16),
+    k.color(...UI.text),
     k.fixed(),
     k.z(100),
   ]);
+
+  const hearts = [];
+  for (let i = 0; i < GAME.maxLives; i++) {
+    hearts.push(
+      k.add([
+        k.sprite("tiles", { frame: TILE.heart }),
+        k.pos(GAME.width - 28 - i * 24, 14),
+        k.anchor("topright"),
+        k.scale(1.2),
+        k.fixed(),
+        k.z(100),
+      ]),
+    );
+  }
 
   function refresh() {
-    coinLabel.text = `Moedas: ${getCoins()}`;
-    livesLabel.text = "♥".repeat(getLives());
+    coinLabel.text = `${getCoins()}`;
+    const lives = getLives();
+    hearts.forEach((h, i) => {
+      h.opacity = i < lives ? 1 : 0.25;
+    });
   }
 
   refresh();
@@ -49,13 +67,24 @@ function createHud(k, getCoins, getLives) {
 export function gameScene(k) {
   k.setGravity(GAME.gravity);
 
+  // Decoração de fundo (sem colisão)
+  for (let i = 0; i < 4; i++) {
+    k.add([
+      k.sprite("bg-tiles", { frame: i % 4 }),
+      k.pos(200 + i * 280, 80 + (i % 2) * 30),
+      k.opacity(0.35),
+      k.scale(2),
+      k.z(-5),
+    ]);
+  }
+
   let lives = GAME.maxLives;
   let coins = 0;
   let gameEnded = false;
 
   spawnGround(k, level1.ground);
 
-  const startX = 80;
+  const startX = 72;
   const startY = level1.ground[0].y;
   const player = createPlayer(k, startX, startY);
   setupPlayerControls(k, player);
@@ -135,10 +164,10 @@ export function gameScene(k) {
   });
 
   k.add([
-    k.text("Chegue na bandeirinha!", { size: 16 }),
+    k.text("Chegue na bandeirinha!", { size: UI.smallSize }),
     k.pos(GAME.width / 2, GAME.height - 24),
     k.anchor("center"),
-    k.color(50, 50, 50),
+    k.color(...UI.textMuted),
     k.fixed(),
     k.z(100),
   ]);

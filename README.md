@@ -50,20 +50,23 @@ node scripts/generate-assets.js
 node scripts/copy-kenney.js
 ```
 
-### Tiles de plataforma (Kenney 1-Bit)
+### Assets (Kenney Pixel Platformer)
 
-O chão usa o [Kenney 1-Bit Platformer Pack](https://kenney.nl/assets/1-bit-platformer-pack) (CC0), atlas **opaco** (`monochrome_tilemap_packed.png`) em `public/assets/kenney/tilemap.png`.
+O jogo usa o [Kenney Pixel Platformer](https://kenney.nl/assets/pixel-platformer) (CC0), em `public/assets/pixel-platformer/`.
 
-O visual é **preto + branco** (fundo preto). O atlas transparente não funciona bem em fundo colorido — só aparecem contornos.
+- **Grade:** 18×18 px por tile
+- **Plataformas:** cada tile é sprite + colisão no mesmo objeto (`anchor: topleft`)
+- **Nível:** `x` e `y` em múltiplos de 18 em [`src/level/level1.js`](src/level/level1.js)
 
-- **Grade:** 16×16 px por tile
-- **Larguras** em `level1.js` devem ser múltiplos de 16 (`w: 704` = 44 tiles)
-- **Visual = colisão:** `alignedWidth()` em [`src/level/tiles.js`](src/level/tiles.js) garante que buracos visuais e hitboxes coincidem
-- **Bordas:** tiles 160–162 (topo) e 180–182 (base)
+Para atualizar os PNGs a partir do pack em `~/Downloads/kenney_pixel-platformer`:
 
-O arquivo `tilemap.png` deve estar commitado no Git (o CI não tem a pasta Kenney irmã). `copy-kenney.js` atualiza o arquivo se o pack existir localmente.
+```bash
+node scripts/copy-pixel-platformer.js
+```
 
-Substituir arquivos em `public/assets/sprites/` também funciona — mantenha os mesmos nomes usados em [`src/assets.js`](src/assets.js).
+Os PNGs em `public/assets/pixel-platformer/` devem estar commitados (CI não tem a pasta Downloads).
+
+**Checkpoint estável (formas básicas):** branch `fix/deploy-workflow-actions`, commit `checkpoint: jogo estável com formas básicas`.
 
 ## Build
 

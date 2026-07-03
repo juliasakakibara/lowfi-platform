@@ -1,46 +1,53 @@
-// Plataformas: { x, y, w } — colisão e visual usam os mesmos valores
-// gap = next.x - (x + w)
+import { TILE_SIZE } from "./tiles.js";
+
+// Grade 18px. gap = next.x - (x + tiles * 18) = 54 (3 tiles)
 export const level1 = {
-  width: 3000,
+  width: 3024,
   ground: [
-    // end 700, gap 50
-    { x: 0, y: 400, w: 700 },
-    // end 1100, gap 50
-    { x: 750, y: 400, w: 350 },
-    // end 1340, gap 50
-    { x: 1150, y: 350, w: 190 },
-    // end 1690, gap 50
-    { x: 1390, y: 400, w: 300 },
-    // end 1910, gap 50
-    { x: 1740, y: 320, w: 170 },
-    // end 2210, gap 50
-    { x: 1960, y: 400, w: 250 },
-    // end 2450, gap 50
-    { x: 2260, y: 360, w: 190 },
-    // end 2900
-    { x: 2500, y: 400, w: 400 },
+    // end 702
+    { x: 0, y: 396, tiles: 39 },
+    // end 1098, gap 54
+    { x: 756, y: 396, tiles: 19 },
+    // end 1368, gap 54
+    { x: 1152, y: 360, tiles: 12 },
+    // end 1728, gap 54
+    { x: 1422, y: 396, tiles: 17 },
+    // end 1962, gap 54
+    { x: 1782, y: 324, tiles: 10 },
+    // end 2268, gap 54
+    { x: 2016, y: 396, tiles: 14 },
+    // end 2520, gap 54
+    { x: 2322, y: 360, tiles: 11 },
+    // end 2970
+    { x: 2574, y: 396, tiles: 22 },
   ],
   enemies: [
-    { x: 300, patrol: [200, 480], y: 400 },
-    { x: 880, patrol: [780, 1040], y: 400 },
-    { x: 1200, patrol: [1160, 1320], y: 350 },
-    { x: 1480, patrol: [1420, 1660], y: 400 },
-    { x: 1780, patrol: [1750, 1890], y: 320 },
-    { x: 2050, patrol: [1980, 2180], y: 400 },
-    { x: 2320, patrol: [2270, 2430], y: 360 },
-    { x: 2680, patrol: [2550, 2850], y: 400 },
+    { x: 306, patrol: [198, 486], y: 396 },
+    { x: 882, patrol: [774, 1044], y: 396 },
+    { x: 1206, patrol: [1152, 1332], y: 360 },
+    { x: 1494, patrol: [1440, 1692], y: 396 },
+    { x: 1818, patrol: [1782, 1944], y: 324 },
+    { x: 2070, patrol: [2016, 2232], y: 396 },
+    { x: 2358, patrol: [2322, 2484], y: 360 },
+    { x: 2700, patrol: [2592, 2916], y: 396 },
   ],
   collectibles: [
-    { x: 200, y: 360 },
-    { x: 500, y: 360 },
+    { x: 216, y: 360 },
+    { x: 504, y: 360 },
     { x: 900, y: 360 },
-    { x: 1220, y: 310 },
-    { x: 1520, y: 360 },
-    { x: 1800, y: 280 },
-    { x: 2080, y: 360 },
-    { x: 2340, y: 320 },
-    { x: 2620, y: 360 },
-    { x: 2800, y: 360 },
+    { x: 1224, y: 324 },
+    { x: 1530, y: 360 },
+    { x: 1836, y: 288 },
+    { x: 2106, y: 360 },
+    { x: 2376, y: 324 },
+    { x: 2664, y: 360 },
+    { x: 2880, y: 360 },
   ],
-  flag: { x: 2850, y: 400 },
+  flag: { x: 2916, y: 396 },
 };
+
+for (const g of level1.ground) {
+  if (g.x % TILE_SIZE !== 0 || g.y % TILE_SIZE !== 0) {
+    console.warn("Platform off-grid:", g);
+  }
+}

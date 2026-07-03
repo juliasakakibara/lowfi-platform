@@ -1,24 +1,37 @@
-import { COLORS } from "../config.js";
-
-export const PLATFORM_HEIGHT = 40;
+import { TILE_SIZE, PLATFORM_ROWS, PLATFORM_HEIGHT, pickPlatformTile } from "./tiles.js";
 
 /**
- * Uma plataforma = um retângulo visível + sólido (mesmo objeto).
- * Buraco real = buraco visível.
+ * Cada tile = sprite + colisão no mesmo objeto (topleft).
+ * Buraco visual = buraco real.
+ *
+ * Segmento: { x, y, tiles } — x e y múltiplos de TILE_SIZE.
  */
 export function spawnGround(k, segments) {
   for (const g of segments) {
-    k.add([
-      k.pos(g.x, g.y),
-      k.rect(g.w, PLATFORM_HEIGHT),
-      k.area({ shape: new k.Rect(k.vec2(0, 0), g.w, PLATFORM_HEIGHT) }),
-      k.body({ isStatic: true }),
-      k.anchor("topleft"),
-      k.color(...COLORS.ground),
-      k.outline(2, k.rgb(56, 128, 0)),
-      k.z(0),
-      "ground",
-      "platform",
-    ]);
+    const cols = g.tiles;
+    if (cols <= 0) continue;
+
+    for (let row = 0; row < PLATFORM_ROWS; row++) {
+      for (let col = 0; col < cols; col++) {
+        const frame = pickPlatformTile(col, cols);
+        const tx = g.x + col * TILE_SIZE;
+        const ty = g.y + row * TILE_SIZE;
+
+        k.add([
+          k.pos(tx, ty),
+          k.sprite("tiles", { frame }),
+          k.area({
+            shape: new k.Rect(k.vec2(0, 0), TILE_SIZE, TILE_SIZE),
+          }),
+          k.body({ isStatic: true }),
+          k.anchor("topleft"),
+          k.z(0),
+          "ground",
+          "platform",
+        ]);
+      }
+    }
   }
 }
+
+export { PLATFORM_HEIGHT, TILE_SIZE };

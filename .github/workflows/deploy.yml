@@ -28,7 +28,7 @@ jobs:
 
       - run: npm ci
       - run: node scripts/generate-sounds.js
-      - run: node scripts/copy-kenney.js
+      - run: node scripts/copy-pixel-platformer.js
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@56afc609e74202658d4ffadeb596f30e7e5a82a3 # v3.0.1

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sounds.js",
+    "prebuild": "node scripts/generate-sounds.js && node scripts/copy-pixel-platformer.js",
     "build": "vite build",
     "preview": "vite preview"
   },

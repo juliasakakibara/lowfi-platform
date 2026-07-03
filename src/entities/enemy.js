@@ -1,4 +1,4 @@
-import { COLORS } from "../config.js";
+import { CHAR } from "../level/tiles.js";
 
 const ENEMY_SPEED = 80;
 
@@ -7,10 +7,10 @@ export function createEnemy(k, x, y, patrol) {
 
   const enemy = k.add([
     k.pos(x, y),
-    k.rect(20, 24),
+    k.sprite("characters", { frame: CHAR.enemy }),
     k.area({ shape: new k.Rect(k.vec2(-10, -24), 20, 24) }),
     k.anchor("bot"),
-    k.color(...COLORS.enemy),
+    k.scale(1.1),
     k.z(5),
     "enemy",
     {
@@ -22,6 +22,7 @@ export function createEnemy(k, x, y, patrol) {
 
   enemy.onUpdate(() => {
     enemy.move(enemy.dir * ENEMY_SPEED, 0);
+    enemy.flipX = enemy.dir < 0;
 
     if (enemy.pos.x <= enemy.minX) {
       enemy.pos.x = enemy.minX;

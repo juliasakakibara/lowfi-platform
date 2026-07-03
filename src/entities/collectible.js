@@ -1,14 +1,13 @@
-import { COLORS } from "../config.js";
+import { TILE } from "../level/tiles.js";
 import { playSound } from "../utils/audio.js";
 import { spawnCoinBurst } from "../utils/particles.js";
 
 export function createCollectible(k, x, y, onCollect) {
   const coin = k.add([
     k.pos(x, y),
-    k.circle(10),
+    k.sprite("tiles", { frame: TILE.coin }),
     k.area({ shape: new k.Rect(k.vec2(-8, -8), 16, 16) }),
     k.anchor("center"),
-    k.color(...COLORS.coin),
     k.z(3),
     "collectible",
   ]);
