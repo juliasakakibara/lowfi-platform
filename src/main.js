@@ -32,8 +32,10 @@ let started = false;
 function startGame() {
   if (started) return;
   started = true;
+  document.getElementById("boot-msg")?.remove();
   k.go("menu");
 }
+
 
 k.onLoad(startGame);
 

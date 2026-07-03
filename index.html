@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Feliz Aniversário!</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <title>SUPER BRUNO BROS.</title>
+
     <style>
       * {
         margin: 0;
@@ -28,6 +31,34 @@
     </style>
   </head>
   <body>
+    <p
+      id="boot-msg"
+      style="
+        font-family: system-ui, sans-serif;
+        text-align: center;
+        color: #333;
+        padding: 2rem;
+      "
+    >
+      Carregando o jogo…
+    </p>
     <script type="module" src="/src/main.js"></script>
+    <script>
+      // Se o bundle não carregar (HTML antigo em cache), avisa em vez de tela azul vazia
+      window.addEventListener(
+        "error",
+        (event) => {
+          const msg = document.getElementById("boot-msg");
+          if (!msg) return;
+          const file = event.filename || "";
+          if (file.includes("main.js") || file.includes("/src/")) {
+            msg.textContent =
+              "Versão antiga em cache. Pressione Cmd+Shift+R (Mac) ou Ctrl+Shift+R (Windows) para atualizar.";
+          }
+        },
+        true,
+      );
+    </script>
   </body>
+
 </html>
