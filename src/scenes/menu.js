@@ -35,18 +35,17 @@ export function menuScene(k) {
     k.z(2),
   ]);
 
-
-  addBodyText(k, "Pressione ESPACO para comecar", 270, {
+  addBodyText(k, "ESPACO ou toque na tela para comecar", 270, {
     size: UI.subtitleSize,
     color: UI.text,
+    width: 400,
   });
   addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 310, {
     size: UI.smallSize,
     width: 400,
   });
 
-
-  k.onKeyPress("space", () => {
-    k.go("game");
-  });
+  const start = () => k.go("game");
+  k.onKeyPress("space", start);
+  k.onClick(start);
 }

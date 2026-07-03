@@ -1,9 +1,17 @@
 import { GAME } from "../config.js";
+import { input } from "../input.js";
 import { playSound } from "../utils/audio.js";
 
 /** Frame 24×24 — Rect (0,0,w,h) + anchor bot: Kaboom alinha a base em pos.y */
 const W = 24;
 const H = 24;
+
+function tryJump(k, player) {
+  if (player.grounded) {
+    player.jump(GAME.jumpForce);
+    playSound(k, "jump");
+  }
+}
 
 export function createPlayer(k, x, y) {
   const player = k.add([
@@ -30,8 +38,8 @@ export function createPlayer(k, x, y) {
     }
 
     let moveX = 0;
-    if (k.isKeyDown("left") || k.isKeyDown("a")) moveX -= 1;
-    if (k.isKeyDown("right") || k.isKeyDown("d")) moveX += 1;
+    if (k.isKeyDown("left") || k.isKeyDown("a") || input.left) moveX -= 1;
+    if (k.isKeyDown("right") || k.isKeyDown("d") || input.right) moveX += 1;
 
     if (moveX !== 0) {
       player.facing = moveX;
@@ -42,6 +50,11 @@ export function createPlayer(k, x, y) {
       }
     } else if (player.curAnim() !== "idle") {
       player.play("idle");
+    }
+
+    if (input.jump) {
+      input.jump = false;
+      tryJump(k, player);
     }
 
     if (player.invincible) {
@@ -55,16 +68,13 @@ export function createPlayer(k, x, y) {
 }
 
 export function setupPlayerControls(k, player) {
-  const tryJump = () => {
-    if (player.grounded) {
-      player.jump(GAME.jumpForce);
-      playSound(k, "jump");
-    }
+  const onJumpKey = () => {
+    input.jump = true;
   };
 
-  k.onKeyPress("space", tryJump);
-  k.onKeyPress("up", tryJump);
-  k.onKeyPress("w", tryJump);
+  k.onKeyPress("space", onJumpKey);
+  k.onKeyPress("up", onJumpKey);
+  k.onKeyPress("w", onJumpKey);
 }
 
 export function knockbackPlayer(player, fromX) {

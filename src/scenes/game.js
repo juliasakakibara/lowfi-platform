@@ -1,4 +1,5 @@
 import { GAME } from "../config.js";
+import { resetInput } from "../input.js";
 import { level1 } from "../level/level1.js";
 import { createPlayer, setupPlayerControls, knockbackPlayer } from "../entities/player.js";
 import { createEnemy } from "../entities/enemy.js";
@@ -10,7 +11,9 @@ import { shouldDamagePlayer, isStomping } from "../utils/collision.js";
 import { spawnStompDust } from "../utils/particles.js";
 import { UI } from "../ui/theme.js";
 import { addIconLabel } from "../ui/panel.js";
+import { addTouchControls } from "../ui/touchControls.js";
 import { TILE } from "../level/tiles.js";
+
 
 function createHud(k, getCoins, getLives) {
   const panelY = 8;
@@ -67,7 +70,9 @@ function createHud(k, getCoins, getLives) {
 }
 
 export function gameScene(k) {
+  resetInput();
   k.setGravity(GAME.gravity);
+
 
   for (let i = 0; i < 4; i++) {
     k.add([
@@ -89,8 +94,10 @@ export function gameScene(k) {
   const startY = level1.ground[0].y;
   const player = createPlayer(k, startX, startY);
   setupPlayerControls(k, player);
+  addTouchControls(k);
 
   for (const e of level1.enemies) {
+
     createEnemy(k, e.x, e.y, e.patrol);
   }
 

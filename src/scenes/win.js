@@ -37,11 +37,13 @@ export function winScene(k, data = {}) {
     z: 2,
   });
 
-  addBodyText(k, "Pressione ESPACO para jogar de novo", GAME.height - 50, {
+  addBodyText(k, "ESPACO ou toque na tela para jogar de novo", GAME.height - 50, {
     size: UI.smallSize,
+    width: 500,
   });
 
-  k.onKeyPress("space", () => {
-    k.go("menu");
-  });
+  const back = () => k.go("menu");
+  k.onKeyPress("space", back);
+  k.onClick(back);
 }
+

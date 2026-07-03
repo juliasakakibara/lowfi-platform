@@ -9,11 +9,12 @@ export function gameoverScene(k) {
     size: UI.subtitleSize,
     color: UI.text,
   });
-  addBodyText(k, "Pressione ESPACO para voltar ao menu", 260, {
+  addBodyText(k, "ESPACO ou toque na tela para voltar ao menu", 260, {
     size: UI.bodySize,
+    width: 380,
   });
 
-  k.onKeyPress("space", () => {
-    k.go("menu");
-  });
+  const back = () => k.go("menu");
+  k.onKeyPress("space", back);
+  k.onClick(back);
 }
