@@ -5,9 +5,9 @@ import { menuScene } from "./scenes/menu.js";
 import { gameScene } from "./scenes/game.js";
 import { winScene } from "./scenes/win.js";
 import { gameoverScene } from "./scenes/gameover.js";
-import { isMobileUi, setupTouchControls } from "./ui/touchControls.js";
+import { setupTouchControls } from "./ui/touchControls.js";
 
-const mobile = isMobileUi();
+
 const root = document.querySelector("#game-root");
 
 const k = kaboom({
@@ -15,12 +15,14 @@ const k = kaboom({
   height: GAME.height,
   root,
   stretch: true,
-  letterbox: !mobile,
+  // Sempre letterbox: mantém proporção 800×450 (sem esticar no mobile)
+  letterbox: true,
   background: COLORS.sky,
   global: false,
   loadingScreen: true,
   crisp: true,
 });
+
 
 // Mesmo base do Vite (./ no GitHub Pages)
 k.loadRoot(import.meta.env.BASE_URL);
