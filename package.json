@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "kaboom": "^3000.1.17"
+    "kaboom": "^3000.1.17",
+    "vite": "^6.3.5"
   },
   "devDependencies": {
-    "pngjs": "^7.0.0",
-    "vite": "^6.3.5"
+    "pngjs": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
