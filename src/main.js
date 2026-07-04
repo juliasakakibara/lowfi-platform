@@ -5,10 +5,31 @@ import { menuScene } from "./scenes/menu.js";
 import { gameScene } from "./scenes/game.js";
 import { winScene } from "./scenes/win.js";
 import { gameoverScene } from "./scenes/gameover.js";
+import { isMobileUi, setupTouchControls } from "./ui/touchControls.js";
+
+const root = document.querySelector("#game-root");
+
+// Barra de toque primeiro — #game-root já fica com a altura correta
+setupTouchControls();
+void root?.offsetHeight;
+
+const rw = Math.max(root?.clientWidth || window.innerWidth, 1);
+const rh = Math.max(root?.clientHeight || window.innerHeight, 1);
+const mobile = isMobileUi();
+
+if (mobile) {
+  // Mobile: proporção do host (céu alto, chão embaixo)
+  GAME.height = Math.max(450, Math.round((GAME.width * rh) / rw));
+} else {
+  // Desktop: 16:9 fixo — letterbox escala pela largura (100% width, sem distorcer)
+  GAME.width = 800;
+  GAME.height = 450;
+}
 
 const k = kaboom({
   width: GAME.width,
   height: GAME.height,
+  root,
   stretch: true,
   letterbox: true,
   background: COLORS.sky,
@@ -19,7 +40,6 @@ const k = kaboom({
 
 // Mesmo base do Vite (./ no GitHub Pages)
 k.loadRoot(import.meta.env.BASE_URL);
-
 
 k.scene("menu", () => menuScene(k));
 k.scene("game", () => gameScene(k));
@@ -35,7 +55,6 @@ function startGame() {
   document.getElementById("boot-msg")?.remove();
   k.go("menu");
 }
-
 
 k.onLoad(startGame);
 

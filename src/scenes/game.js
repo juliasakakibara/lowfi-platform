@@ -1,5 +1,7 @@
 import { GAME } from "../config.js";
-import { level1 } from "../level/level1.js";
+import { resetInput } from "../input.js";
+import { getLevel1 } from "../level/level1.js";
+
 import { createPlayer, setupPlayerControls, knockbackPlayer } from "../entities/player.js";
 import { createEnemy } from "../entities/enemy.js";
 import { createCollectible } from "../entities/collectible.js";
@@ -11,6 +13,8 @@ import { spawnStompDust } from "../utils/particles.js";
 import { UI } from "../ui/theme.js";
 import { addIconLabel } from "../ui/panel.js";
 import { TILE } from "../level/tiles.js";
+
+
 
 function createHud(k, getCoins, getLives) {
   const panelY = 8;
@@ -67,7 +71,10 @@ function createHud(k, getCoins, getLives) {
 }
 
 export function gameScene(k) {
+  resetInput();
   k.setGravity(GAME.gravity);
+
+  const level1 = getLevel1();
 
   for (let i = 0; i < 4; i++) {
     k.add([
@@ -102,6 +109,7 @@ export function gameScene(k) {
       hud.refresh();
     });
   }
+
 
   function endGame() {
     if (gameEnded) return;

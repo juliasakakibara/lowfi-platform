@@ -1,16 +1,18 @@
-import { ASSETS } from "../config.js";
+import { ASSETS, GAME } from "../config.js";
 import { UI } from "../ui/theme.js";
 import { addPanel, addTitle, addBodyText } from "../ui/panel.js";
 
 export function menuScene(k) {
   const cx = k.center().x;
+  const panelH = 320;
+  const panelY = (GAME.height - panelH) / 2;
 
-  addPanel(k, cx - 230, 60, 460, 320);
+  addPanel(k, cx - 230, panelY, 460, panelH);
 
   if (ASSETS.customMenuBanner) {
     k.add([
       k.sprite("menu-banner"),
-      k.pos(cx, 80),
+      k.pos(cx, panelY + 20),
       k.anchor("top"),
       k.scale(0.8),
       k.fixed(),
@@ -18,35 +20,32 @@ export function menuScene(k) {
     ]);
   }
 
-  addTitle(k, "SUPER BRUNO BROS.", 85);
-  // Largura do painel (460) menos margem — quebra em 2 linhas
-  addBodyText(k, "Colete as moedas e desarme os inimigos para descobrir seu presente!", 130, {
+  addTitle(k, "SUPER BRUNO BROS.", panelY + 25);
+  addBodyText(k, "Colete as moedas e desarme os inimigos para descobrir seu presente!", panelY + 70, {
     size: UI.subtitleSize,
     width: 400,
   });
 
-  // Personagem centralizado abaixo do subtítulo
   k.add([
     k.sprite("bruno", { anim: "walk" }),
-    k.pos(cx, 230),
+    k.pos(cx, panelY + 170),
     k.anchor("center"),
     k.scale(2.2),
     k.fixed(),
     k.z(2),
   ]);
 
-
-  addBodyText(k, "Pressione ESPACO para comecar", 270, {
+  addBodyText(k, "ESPACO ou toque na tela para comecar", panelY + 210, {
     size: UI.subtitleSize,
     color: UI.text,
+    width: 400,
   });
-  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", 310, {
+  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", panelY + 250, {
     size: UI.smallSize,
     width: 400,
   });
 
-
-  k.onKeyPress("space", () => {
-    k.go("game");
-  });
+  const start = () => k.go("game");
+  k.onKeyPress("space", start);
+  k.onClick(start);
 }

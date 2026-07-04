@@ -1,6 +1,7 @@
 export const GAME = {
   width: 800,
-  height: 450,
+  // Ajustado em main.js para a proporção do #game-root (céu responsivo)
+  height: 600,
   gravity: 1400,
   playerSpeed: 300,
   jumpForce: 620,
