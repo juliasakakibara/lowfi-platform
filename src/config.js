@@ -1,6 +1,7 @@
 export const GAME = {
   width: 800,
-  height: 450,
+  height: 600,
+
   gravity: 1400,
   playerSpeed: 300,
   jumpForce: 620,

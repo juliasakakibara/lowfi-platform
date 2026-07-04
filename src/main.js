@@ -15,7 +15,7 @@ const k = kaboom({
   height: GAME.height,
   root,
   stretch: true,
-  // Sempre letterbox: mantém proporção 800×450 (sem esticar no mobile)
+  // Sempre letterbox: mantém proporção 800×600 (sem esticar)
   letterbox: true,
   background: COLORS.sky,
   global: false,

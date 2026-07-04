@@ -12,23 +12,26 @@ export function winScene(k, data = {}) {
   spawnConfetti(k, GAME.width, GAME.height, 4);
 
   const panelH = 160 + BIRTHDAY_MESSAGE.lines.length * 32;
-  addPanel(k, k.center().x - 260, 40, 520, panelH);
+  const panelY = (GAME.height - panelH) / 2 - 20;
+  const cx = k.center().x;
 
-  addTitle(k, "Parabens!", 55);
-  addBodyText(k, BIRTHDAY_MESSAGE.title, 105, {
+  addPanel(k, cx - 260, panelY, 520, panelH);
+
+  addTitle(k, "Parabens!", panelY + 15);
+  addBodyText(k, BIRTHDAY_MESSAGE.title, panelY + 65, {
     size: 26,
     color: UI.accent,
   });
 
   BIRTHDAY_MESSAGE.lines.forEach((line, i) => {
-    addBodyText(k, line, 150 + i * 32, { color: UI.text });
+    addBodyText(k, line, panelY + 110 + i * 32, { color: UI.text });
   });
 
-  const coinY = 150 + BIRTHDAY_MESSAGE.lines.length * 32 + 16;
+  const coinY = panelY + 110 + BIRTHDAY_MESSAGE.lines.length * 32 + 16;
   addIconLabel(k, {
     frame: TILE.coin,
     text: `Moedas coletadas: ${coins}`,
-    x: k.center().x,
+    x: cx,
     y: coinY,
     centerX: true,
     iconScale: 1.4,
@@ -46,4 +49,3 @@ export function winScene(k, data = {}) {
   k.onKeyPress("space", back);
   k.onClick(back);
 }
-
