@@ -1,16 +1,15 @@
 import { input } from "../input.js";
 
-/** Celular / DevTools mobile — não desktop com trackpad (maxTouchPoints > 0). */
+/** Viewport estreita ou dispositivo touch real (não só trackpad). */
 export function isMobileUi() {
-  if (typeof navigator === "undefined" || typeof window === "undefined") {
-    return false;
-  }
-  const touch = navigator.maxTouchPoints > 0;
-  const coarse = window.matchMedia("(pointer: coarse)").matches;
-  const narrow = window.matchMedia("(max-width: 900px)").matches;
-  return narrow || (touch && coarse);
+  if (typeof window === "undefined") return false;
+  const narrow =
+    window.innerWidth <= 900 || window.matchMedia("(max-width: 900px)").matches;
+  const touchPhone =
+    navigator.maxTouchPoints > 0 &&
+    window.matchMedia("(pointer: coarse)").matches;
+  return narrow || touchPhone;
 }
-
 
 function bindHold(button, key) {
   const set = (down) => {
@@ -34,16 +33,12 @@ function bindHold(button, key) {
 }
 
 /**
- * Barra HTML abaixo do canvas (mobile / viewport estreita).
- * Chamar antes de medir #game-root para o layout já incluir a barra.
+ * Liga os botões HTML. A barra em si aparece via CSS (@media).
+ * Chamar antes de medir #game-root.
  */
 export function setupTouchControls() {
-  const app = document.getElementById("app");
   const bar = document.getElementById("touch-bar");
-  if (!app || !bar || !isMobileUi()) return;
-
-  app.classList.add("is-mobile");
-  bar.hidden = false;
+  if (!bar) return;
 
   const left = bar.querySelector('[data-dir="left"]');
   const right = bar.querySelector('[data-dir="right"]');

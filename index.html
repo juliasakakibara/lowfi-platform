@@ -58,9 +58,13 @@
         background: rgba(255, 255, 255, 0.92);
         border-top: 2px solid #282832;
       }
-      #app.is-mobile #touch-bar {
-        display: flex;
+      /* CSS puro — mais confiável que JS no DevTools device mode */
+      @media (max-width: 900px), (hover: none) and (pointer: coarse) {
+        #touch-bar {
+          display: flex;
+        }
       }
+
       #touch-bar .touch-dirs {
         display: flex;
         gap: 12px;
@@ -106,7 +110,8 @@
       <div id="game-root">
         <p id="boot-msg">Carregando o jogo…</p>
       </div>
-      <div id="touch-bar" hidden>
+      <div id="touch-bar">
+
         <div class="touch-dirs">
           <button type="button" data-dir="left" aria-label="Esquerda">&lt;</button>
           <button type="button" data-dir="right" aria-label="Direita">&gt;</button>
