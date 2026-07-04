@@ -13,13 +13,20 @@ export const COLORS = {
   sky: [135, 206, 235],
 };
 
-export const BIRTHDAY_MESSAGE = {
-  title: "Feliz aniversário, xuxu!!",
-  lines: [
-    "A surpresa te espera no sábado às 19h!",
-    "Te amo ♥",
-  ],
-};
+// Payload ofuscado (base64) — não impede alguém determinado, mas evita spoiler casual no Sources
+const BIRTHDAY_PAYLOAD =
+  "eyJ0aXRsZSI6IkZlbGl6IGFuaXZlcnPDoXJpbywgeHV4dSEhIiwibGluZXMiOlsiQSBzdXJwcmVzYSB0ZSBlc3BlcmEgbm8gc8OhYmFkbyDDoHMgMTloISIsIlRlIGFtbyDimaUiXX0=";
+
+export function getBirthdayMessage() {
+  try {
+    const json = new TextDecoder().decode(
+      Uint8Array.from(atob(BIRTHDAY_PAYLOAD), (c) => c.charCodeAt(0)),
+    );
+    return JSON.parse(json);
+  } catch {
+    return { title: "Parabéns!", lines: [] };
+  }
+}
 
 export const ASSETS = {
   useCustomFlag: false,

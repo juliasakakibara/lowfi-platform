@@ -1,15 +1,16 @@
 import { input, resetInput } from "../input.js";
 
-/** Viewport estreita ou dispositivo touch real (não só trackpad). */
+/** Alinhado ao CSS da #touch-bar: max-width 900px ou hover:none + pointer:coarse */
 export function isMobileUi() {
   if (typeof window === "undefined") return false;
   const narrow =
     window.innerWidth <= 900 || window.matchMedia("(max-width: 900px)").matches;
-  const touchPhone =
-    navigator.maxTouchPoints > 0 &&
-    window.matchMedia("(pointer: coarse)").matches;
-  return narrow || touchPhone;
+  const coarseTouch =
+    window.matchMedia("(hover: none)").matches
+    && window.matchMedia("(pointer: coarse)").matches;
+  return narrow || coarseTouch;
 }
+
 
 function bindHold(button, key) {
   const set = (down) => {

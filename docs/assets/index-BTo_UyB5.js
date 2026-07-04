@@ -3682,13 +3682,17 @@ const GAME = {
 const COLORS = {
   sky: [135, 206, 235]
 };
-const BIRTHDAY_MESSAGE = {
-  title: "Feliz aniversário, xuxu!!",
-  lines: [
-    "A surpresa te espera no sábado às 19h!",
-    "Te amo ♥"
-  ]
-};
+const BIRTHDAY_PAYLOAD = "eyJ0aXRsZSI6IkZlbGl6IGFuaXZlcnPDoXJpbywgeHV4dSEhIiwibGluZXMiOlsiQSBzdXJwcmVzYSB0ZSBlc3BlcmEgbm8gc8OhYmFkbyDDoHMgMTloISIsIlRlIGFtbyDimaUiXX0=";
+function getBirthdayMessage() {
+  try {
+    const json = new TextDecoder().decode(
+      Uint8Array.from(atob(BIRTHDAY_PAYLOAD), (c) => c.charCodeAt(0))
+    );
+    return JSON.parse(json);
+  } catch {
+    return { title: "Parabéns!", lines: [] };
+  }
+}
 function loadGameAssets(k2) {
   k2.loadSprite("tiles", "assets/pixel-platformer/tiles.png", {
     sliceX: 20,
@@ -3760,6 +3764,24 @@ function addBodyText(k2, text, y, opts = {}) {
     k2.z(opts.z ?? 2)
   ]);
 }
+function addActionHint(k2, text, y, onAction, opts = {}) {
+  const label = k2.add([
+    k2.text(text, {
+      size: opts.size ?? UI.subtitleSize,
+      width: opts.width ?? 400,
+      align: "center"
+    }),
+    k2.pos(k2.center().x, y),
+    k2.anchor("top"),
+    k2.color(...opts.color ?? UI.text),
+    k2.area(),
+    k2.fixed(),
+    k2.z(opts.z ?? 2)
+  ]);
+  label.onClick(onAction);
+  k2.onKeyPress("space", onAction);
+  return label;
+}
 function addIconLabel(k2, opts) {
   const {
     frame,
@@ -3813,14 +3835,12 @@ function menuScene(k2) {
     k2.fixed(),
     k2.z(2)
   ]);
-  addBodyText(k2, "ESPACO ou toque na tela para comecar", panelY + 220, {
+  const start = () => k2.go("game");
+  addActionHint(k2, "ESPAÇO ou toque aqui para começar", panelY + 220, start, {
     size: UI.subtitleSize,
     color: UI.text,
     width: 400
   });
-  const start = () => k2.go("game");
-  k2.onKeyPress("space", start);
-  k2.onClick(start);
 }
 const input = {
   left: false,
@@ -3933,6 +3953,10 @@ function playSound(_k2, name) {
       beep(880, 0.06, 0.18);
       beep(1100, 0.1, 0.15);
       break;
+    case "stomp":
+      beep(200, 0.06, 0.2);
+      beep(120, 0.08, 0.15);
+      break;
     case "hurt":
       beep(150, 0.2, 0.25, "sawtooth");
       break;
@@ -3982,8 +4006,11 @@ function createPlayer(k2, x, y) {
       if (player.curAnim() !== "walk") {
         player.play("walk");
       }
-    } else if (player.curAnim() !== "idle") {
-      player.play("idle");
+    } else {
+      player.vel.x = 0;
+      if (player.curAnim() !== "idle") {
+        player.play("idle");
+      }
     }
     if (input.jump) {
       input.jump = false;
@@ -4327,7 +4354,7 @@ function gameScene(k2) {
     if (gameEnded || player.invincible) return;
     if (isStomping(player, enemy)) {
       player.jump(GAME.jumpForce * 0.85);
-      playSound(k2, "coin");
+      playSound(k2, "stomp");
       spawnStompDust(k2, enemy.pos);
       enemy.destroy();
       return;
@@ -4349,28 +4376,30 @@ function gameScene(k2) {
     );
     k2.camPos(targetX, GAME.height / 2);
     if (player.pos.y > GAME.height + 100) {
-      handlePlayerHit({ pos: { x: player.pos.x } });
       player.pos = k2.vec2(startX, startY);
+      player.vel.x = 0;
+      player.vel.y = 0;
     }
   });
 }
 function winScene(k2, data = {}) {
   const coins = data.coins ?? 0;
+  const message = getBirthdayMessage();
   playSound(k2, "win");
   spawnConfetti(k2, GAME.width, GAME.height, 4);
-  const panelH = 160 + BIRTHDAY_MESSAGE.lines.length * 32;
+  const panelH = 160 + message.lines.length * 32;
   const panelY = (GAME.height - panelH) / 2 - 20;
   const cx = k2.center().x;
   addPanel(k2, cx - 260, panelY, 520, panelH);
-  addTitle(k2, "Parabens!", panelY + 15);
-  addBodyText(k2, BIRTHDAY_MESSAGE.title, panelY + 65, {
+  addTitle(k2, "Parabéns!", panelY + 15);
+  addBodyText(k2, message.title, panelY + 65, {
     size: 26,
     color: UI.accent
   });
-  BIRTHDAY_MESSAGE.lines.forEach((line, i2) => {
+  message.lines.forEach((line, i2) => {
     addBodyText(k2, line, panelY + 110 + i2 * 32, { color: UI.text });
   });
-  const coinY = panelY + 110 + BIRTHDAY_MESSAGE.lines.length * 32 + 16;
+  const coinY = panelY + 110 + message.lines.length * 32 + 16;
   addIconLabel(k2, {
     frame: TILE.coin,
     text: `Moedas coletadas: ${coins}`,
@@ -4382,37 +4411,33 @@ function winScene(k2, data = {}) {
     color: UI.coin,
     z: 2
   });
-  addBodyText(k2, "ESPACO ou toque na tela para jogar de novo", GAME.height - 50, {
+  const back = () => k2.go("menu");
+  addActionHint(k2, "ESPAÇO ou toque aqui para jogar de novo", GAME.height - 50, back, {
     size: UI.smallSize,
     width: 500
   });
-  const back = () => k2.go("menu");
-  k2.onKeyPress("space", back);
-  k2.onClick(back);
 }
 function gameoverScene(k2) {
   const panelH = 210;
   const panelY = (GAME.height - panelH) / 2;
   const cx = k2.center().x;
   addPanel(k2, cx - 210, panelY, 420, panelH);
-  addTitle(k2, "Quase la!", panelY + 25);
-  addBodyText(k2, "Nao desista — tente de novo!", panelY + 90, {
+  addTitle(k2, "Quase lá!", panelY + 25);
+  addBodyText(k2, "Não desista — tente de novo!", panelY + 90, {
     size: UI.subtitleSize,
     color: UI.text
   });
-  addBodyText(k2, "ESPACO ou toque na tela para voltar ao menu", panelY + 150, {
+  const back = () => k2.go("menu");
+  addActionHint(k2, "ESPAÇO ou toque aqui para voltar ao menu", panelY + 150, back, {
     size: UI.bodySize,
     width: 380
   });
-  const back = () => k2.go("menu");
-  k2.onKeyPress("space", back);
-  k2.onClick(back);
 }
 function isMobileUi() {
   if (typeof window === "undefined") return false;
   const narrow = window.innerWidth <= 900 || window.matchMedia("(max-width: 900px)").matches;
-  const touchPhone = navigator.maxTouchPoints > 0 && window.matchMedia("(pointer: coarse)").matches;
-  return narrow || touchPhone;
+  const coarseTouch = window.matchMedia("(hover: none)").matches && window.matchMedia("(pointer: coarse)").matches;
+  return narrow || coarseTouch;
 }
 function bindHold(button, key) {
   const set = (down) => {
@@ -4421,6 +4446,7 @@ function bindHold(button, key) {
   };
   const onDown = (event) => {
     event.preventDefault();
+    button.blur();
     set(true);
   };
   const onUp = (event) => {
@@ -4431,6 +4457,7 @@ function bindHold(button, key) {
   button.addEventListener("pointerup", onUp);
   button.addEventListener("pointerleave", onUp);
   button.addEventListener("pointercancel", onUp);
+  button.setAttribute("tabindex", "-1");
 }
 function setupTouchControls() {
   const bar = document.getElementById("touch-bar");
@@ -4441,8 +4468,10 @@ function setupTouchControls() {
   if (left) bindHold(left, "left");
   if (right) bindHold(right, "right");
   if (jump) {
+    jump.setAttribute("tabindex", "-1");
     jump.addEventListener("pointerdown", (event) => {
       event.preventDefault();
+      jump.blur();
       input.jump = true;
       jump.classList.add("is-active");
     });
@@ -4454,6 +4483,13 @@ function setupTouchControls() {
     jump.addEventListener("pointerleave", clearJump);
     jump.addEventListener("pointercancel", clearJump);
   }
+  window.addEventListener("pointerup", () => {
+    input.left = false;
+    input.right = false;
+    left == null ? void 0 : left.classList.remove("is-active");
+    right == null ? void 0 : right.classList.remove("is-active");
+  });
+  window.addEventListener("blur", resetInput);
 }
 const root = document.querySelector("#game-root");
 setupTouchControls();
@@ -4498,3 +4534,17 @@ if (k.canvas) {
   k.canvas.focus();
   k.canvas.addEventListener("click", () => k.canvas.focus());
 }
+const bootW = window.innerWidth;
+const bootH = window.innerHeight;
+window.addEventListener("orientationchange", () => {
+  setTimeout(() => window.location.reload(), 150);
+});
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (Math.abs(window.innerWidth - bootW) > 80 || Math.abs(window.innerHeight - bootH) > 80) {
+      window.location.reload();
+    }
+  }, 300);
+});

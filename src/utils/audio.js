@@ -37,7 +37,12 @@ export function playSound(_k, name) {
       beep(880, 0.06, 0.18);
       beep(1100, 0.1, 0.15);
       break;
+    case "stomp":
+      beep(200, 0.06, 0.2);
+      beep(120, 0.08, 0.15);
+      break;
     case "hurt":
+
       beep(150, 0.2, 0.25, "sawtooth");
       break;
     case "win":

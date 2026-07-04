@@ -39,6 +39,27 @@ export function addBodyText(k, text, y, opts = {}) {
   ]);
 }
 
+/** CTA clicável (só o texto) + ESPAÇO — evita onClick em tela inteira */
+export function addActionHint(k, text, y, onAction, opts = {}) {
+  const label = k.add([
+    k.text(text, {
+      size: opts.size ?? UI.subtitleSize,
+      width: opts.width ?? 400,
+      align: "center",
+    }),
+    k.pos(k.center().x, y),
+    k.anchor("top"),
+    k.color(...(opts.color ?? UI.text)),
+    k.area(),
+    k.fixed(),
+    k.z(opts.z ?? 2),
+  ]);
+  label.onClick(onAction);
+  k.onKeyPress("space", onAction);
+  return label;
+}
+
+
 
 /**
  * Ícone (frame da sheet tiles) + texto na mesma linha, alinhados ao centro vertical.
