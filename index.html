@@ -39,9 +39,9 @@
       }
       #game-root canvas {
         display: block;
-        /* Proporção lógica = host → 100% sem distorcer */
-        width: 100%;
-        height: 100%;
+        /* Kaboom define o tamanho (letterbox); não forçar 100%×100% */
+        max-width: 100%;
+        max-height: 100%;
         touch-action: none;
         user-select: none;
         -webkit-user-select: none;

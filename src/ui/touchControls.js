@@ -1,14 +1,16 @@
 import { input } from "../input.js";
 
-/** Celular, DevTools mobile ou viewport estreita. */
+/** Celular / DevTools mobile — não desktop com trackpad (maxTouchPoints > 0). */
 export function isMobileUi() {
   if (typeof navigator === "undefined" || typeof window === "undefined") {
     return false;
   }
   const touch = navigator.maxTouchPoints > 0;
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
   const narrow = window.matchMedia("(max-width: 900px)").matches;
-  return touch || narrow;
+  return narrow || (touch && coarse);
 }
+
 
 function bindHold(button, key) {
   const set = (down) => {

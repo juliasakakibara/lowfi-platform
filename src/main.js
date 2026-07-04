@@ -11,19 +11,20 @@ const root = document.querySelector("#game-root");
 
 // Barra de toque primeiro — #game-root já fica com a altura correta
 setupTouchControls();
-void root?.offsetHeight; // força reflow antes de medir
+void root?.offsetHeight;
 
 const rw = Math.max(root?.clientWidth || window.innerWidth, 1);
 const rh = Math.max(root?.clientHeight || window.innerHeight, 1);
-GAME.height = Math.max(450, Math.round(GAME.width * (rh / rw)));
+// Mesma proporção do host → letterbox preenche sem barras nem distorção
+GAME.height = Math.max(450, Math.round((GAME.width * rh) / rw));
 
 const k = kaboom({
   width: GAME.width,
   height: GAME.height,
   root,
   stretch: true,
-  // Proporção lógica = host → preenche 100% sem distorcer
-  letterbox: false,
+  // letterbox preserva pixels; altura dinâmica evita faixa minúscula
+  letterbox: true,
   background: COLORS.sky,
   global: false,
   loadingScreen: true,
