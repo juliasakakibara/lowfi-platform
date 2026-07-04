@@ -7,22 +7,28 @@ import { winScene } from "./scenes/win.js";
 import { gameoverScene } from "./scenes/gameover.js";
 import { setupTouchControls } from "./ui/touchControls.js";
 
-
 const root = document.querySelector("#game-root");
+
+// Barra de toque primeiro — #game-root já fica com a altura correta
+setupTouchControls();
+void root?.offsetHeight; // força reflow antes de medir
+
+const rw = Math.max(root?.clientWidth || window.innerWidth, 1);
+const rh = Math.max(root?.clientHeight || window.innerHeight, 1);
+GAME.height = Math.max(450, Math.round(GAME.width * (rh / rw)));
 
 const k = kaboom({
   width: GAME.width,
   height: GAME.height,
   root,
   stretch: true,
-  // Sempre letterbox: mantém proporção 800×600 (sem esticar)
-  letterbox: true,
+  // Proporção lógica = host → preenche 100% sem distorcer
+  letterbox: false,
   background: COLORS.sky,
   global: false,
   loadingScreen: true,
   crisp: true,
 });
-
 
 // Mesmo base do Vite (./ no GitHub Pages)
 k.loadRoot(import.meta.env.BASE_URL);
@@ -33,7 +39,6 @@ k.scene("win", (data) => winScene(k, data));
 k.scene("gameover", () => gameoverScene(k));
 
 loadGameAssets(k);
-setupTouchControls();
 
 let started = false;
 function startGame() {

@@ -1,14 +1,13 @@
 import { input } from "../input.js";
 
-/** Celular real ou DevTools device mode — não desktop com trackpad. */
+/** Celular, DevTools mobile ou viewport estreita. */
 export function isMobileUi() {
   if (typeof navigator === "undefined" || typeof window === "undefined") {
     return false;
   }
   const touch = navigator.maxTouchPoints > 0;
-  const coarse = window.matchMedia("(pointer: coarse)").matches;
   const narrow = window.matchMedia("(max-width: 900px)").matches;
-  return touch && (coarse || narrow);
+  return touch || narrow;
 }
 
 function bindHold(button, key) {
@@ -33,7 +32,8 @@ function bindHold(button, key) {
 }
 
 /**
- * Barra HTML abaixo do canvas (só mobile). Não desenha no mundo Kaboom.
+ * Barra HTML abaixo do canvas (mobile / viewport estreita).
+ * Chamar antes de medir #game-root para o layout já incluir a barra.
  */
 export function setupTouchControls() {
   const app = document.getElementById("app");
