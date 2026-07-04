@@ -3671,7 +3671,8 @@ var zo = i((n = {}) => {
 }, "default");
 const GAME = {
   width: 800,
-  height: 450,
+  // Ajustado em main.js para a proporção do #game-root (céu responsivo)
+  height: 600,
   gravity: 1400,
   playerSpeed: 300,
   jumpForce: 620,
@@ -3796,36 +3797,53 @@ function addIconLabel(k2, opts) {
 }
 function menuScene(k2) {
   const cx = k2.center().x;
-  addPanel(k2, cx - 230, 60, 460, 320);
-  addTitle(k2, "SUPER BRUNO BROS.", 85);
-  addBodyText(k2, "Colete as moedas e desarme os inimigos para descobrir seu presente!", 130, {
+  const panelH = 320;
+  const panelY = (GAME.height - panelH) / 2;
+  addPanel(k2, cx - 230, panelY, 460, panelH);
+  addTitle(k2, "SUPER BRUNO BROS.", panelY + 25);
+  addBodyText(k2, "Colete as moedas e desarme os inimigos para descobrir seu presente!", panelY + 70, {
     size: UI.subtitleSize,
     width: 400
   });
   k2.add([
     k2.sprite("bruno", { anim: "walk" }),
-    k2.pos(cx, 230),
+    k2.pos(cx, panelY + 170),
     k2.anchor("center"),
     k2.scale(2.2),
     k2.fixed(),
     k2.z(2)
   ]);
-  addBodyText(k2, "Pressione ESPACO para comecar", 270, {
+  addBodyText(k2, "ESPACO ou toque na tela para comecar", panelY + 210, {
     size: UI.subtitleSize,
-    color: UI.text
+    color: UI.text,
+    width: 400
   });
-  addBodyText(k2, "<- -> ou A D para mover  |  ESPACO para pular", 310, {
+  addBodyText(k2, "<- -> ou A D para mover  |  ESPACO para pular", panelY + 250, {
     size: UI.smallSize,
     width: 400
   });
-  k2.onKeyPress("space", () => {
-    k2.go("game");
-  });
+  const start = () => k2.go("game");
+  k2.onKeyPress("space", start);
+  k2.onClick(start);
+}
+const input = {
+  left: false,
+  right: false,
+  jump: false
+};
+function resetInput() {
+  input.left = false;
+  input.right = false;
+  input.jump = false;
 }
 const TILE_SIZE = 18;
 const PLATFORM_ROWS = 1;
-const GROUND_Y = 432;
-const ENEMY_FLOAT_Y = GROUND_Y - 72;
+function groundY() {
+  return GAME.height - TILE_SIZE;
+}
+function enemyFloatY() {
+  return groundY() - 72;
+}
 const TILE = {
   grassLeft: 0,
   grassMid: 1,
@@ -3843,49 +3861,47 @@ function pickPlatformTile(col, cols) {
   if (col === cols - 1) return TILE.grassRight;
   return TILE.grassMid;
 }
-const level1 = {
-  width: 3024,
-  ground: [
-    // end 720
-    { x: 0, y: GROUND_Y, tiles: 40 },
-    // end 1134, gap 54
-    { x: 774, y: GROUND_Y, tiles: 20 },
-    // end 1548, gap 54
-    { x: 1188, y: GROUND_Y, tiles: 20 },
-    // end 1962, gap 54
-    { x: 1602, y: GROUND_Y, tiles: 20 },
-    // end 2376, gap 54
-    { x: 2016, y: GROUND_Y, tiles: 20 },
-    // end 2970
-    { x: 2430, y: GROUND_Y, tiles: 30 }
-  ],
-  // Inimigos flutuam acima do chão (não andam nas plataformas)
-  enemies: [
-    { x: 306, patrol: [180, 540], y: ENEMY_FLOAT_Y },
-    { x: 900, patrol: [792, 1080], y: ENEMY_FLOAT_Y },
-    { x: 1300, patrol: [1206, 1512], y: ENEMY_FLOAT_Y },
-    { x: 1720, patrol: [1620, 1926], y: ENEMY_FLOAT_Y },
-    { x: 2140, patrol: [2034, 2340], y: ENEMY_FLOAT_Y },
-    { x: 2600, patrol: [2466, 2880], y: ENEMY_FLOAT_Y }
-  ],
-  collectibles: [
-    { x: 216, y: GROUND_Y - 54 },
-    { x: 504, y: GROUND_Y - 54 },
-    { x: 900, y: GROUND_Y - 90 },
-    { x: 1300, y: GROUND_Y - 54 },
-    { x: 1720, y: GROUND_Y - 90 },
-    { x: 1900, y: GROUND_Y - 54 },
-    { x: 2140, y: GROUND_Y - 54 },
-    { x: 2300, y: GROUND_Y - 90 },
-    { x: 2600, y: GROUND_Y - 54 },
-    { x: 2800, y: GROUND_Y - 54 }
-  ],
-  flag: { x: 2916, y: GROUND_Y }
-};
-for (const g of level1.ground) {
-  if (g.x % TILE_SIZE !== 0 || g.y % TILE_SIZE !== 0) {
-    console.warn("Platform off-grid:", g);
+function getLevel1() {
+  const gy = groundY();
+  const ey = enemyFloatY();
+  const level = {
+    width: 3024,
+    ground: [
+      { x: 0, y: gy, tiles: 40 },
+      { x: 774, y: gy, tiles: 20 },
+      { x: 1188, y: gy, tiles: 20 },
+      { x: 1602, y: gy, tiles: 20 },
+      { x: 2016, y: gy, tiles: 20 },
+      { x: 2430, y: gy, tiles: 30 }
+    ],
+    enemies: [
+      { x: 306, patrol: [180, 540], y: ey },
+      { x: 900, patrol: [792, 1080], y: ey },
+      { x: 1300, patrol: [1206, 1512], y: ey },
+      { x: 1720, patrol: [1620, 1926], y: ey },
+      { x: 2140, patrol: [2034, 2340], y: ey },
+      { x: 2600, patrol: [2466, 2880], y: ey }
+    ],
+    collectibles: [
+      { x: 216, y: gy - 54 },
+      { x: 504, y: gy - 54 },
+      { x: 900, y: gy - 90 },
+      { x: 1300, y: gy - 54 },
+      { x: 1720, y: gy - 90 },
+      { x: 1900, y: gy - 54 },
+      { x: 2140, y: gy - 54 },
+      { x: 2300, y: gy - 90 },
+      { x: 2600, y: gy - 54 },
+      { x: 2800, y: gy - 54 }
+    ],
+    flag: { x: 2916, y: gy }
+  };
+  for (const g of level.ground) {
+    if (g.x % TILE_SIZE !== 0 || g.y % TILE_SIZE !== 0) {
+      console.warn("Platform off-grid:", g);
+    }
   }
+  return level;
 }
 let audioCtx = null;
 function getCtx() {
@@ -3933,6 +3949,12 @@ function playSound(_k2, name) {
 }
 const W$1 = 24;
 const H$1 = 24;
+function tryJump(k2, player) {
+  if (player.grounded) {
+    player.jump(GAME.jumpForce);
+    playSound(k2, "jump");
+  }
+}
 function createPlayer(k2, x, y) {
   const player = k2.add([
     k2.pos(x, y),
@@ -3955,8 +3977,8 @@ function createPlayer(k2, x, y) {
       player.vel.y = 0;
     }
     let moveX = 0;
-    if (k2.isKeyDown("left") || k2.isKeyDown("a")) moveX -= 1;
-    if (k2.isKeyDown("right") || k2.isKeyDown("d")) moveX += 1;
+    if (k2.isKeyDown("left") || k2.isKeyDown("a") || input.left) moveX -= 1;
+    if (k2.isKeyDown("right") || k2.isKeyDown("d") || input.right) moveX += 1;
     if (moveX !== 0) {
       player.facing = moveX;
       player.move(moveX * GAME.playerSpeed, 0);
@@ -3967,6 +3989,10 @@ function createPlayer(k2, x, y) {
     } else if (player.curAnim() !== "idle") {
       player.play("idle");
     }
+    if (input.jump) {
+      input.jump = false;
+      tryJump(k2, player);
+    }
     if (player.invincible) {
       player.opacity = Math.floor(k2.time() * 10) % 2 === 0 ? 0.45 : 1;
     } else {
@@ -3976,15 +4002,12 @@ function createPlayer(k2, x, y) {
   return player;
 }
 function setupPlayerControls(k2, player) {
-  const tryJump = () => {
-    if (player.grounded) {
-      player.jump(GAME.jumpForce);
-      playSound(k2, "jump");
-    }
+  const onJumpKey = () => {
+    input.jump = true;
   };
-  k2.onKeyPress("space", tryJump);
-  k2.onKeyPress("up", tryJump);
-  k2.onKeyPress("w", tryJump);
+  k2.onKeyPress("space", onJumpKey);
+  k2.onKeyPress("up", onJumpKey);
+  k2.onKeyPress("w", onJumpKey);
 }
 function knockbackPlayer(player, fromX) {
   const dir = player.pos.x < fromX ? -1 : 1;
@@ -4255,7 +4278,9 @@ function createHud(k2, getCoins, getLives) {
   return { refresh };
 }
 function gameScene(k2) {
+  resetInput();
   k2.setGravity(GAME.gravity);
+  const level1 = getLevel1();
   for (let i2 = 0; i2 < 4; i2++) {
     k2.add([
       k2.sprite("bg-tiles", { frame: i2 % 4 }),
@@ -4272,7 +4297,7 @@ function gameScene(k2) {
   const startX = 72;
   const startY = level1.ground[0].y;
   const player = createPlayer(k2, startX, startY);
-  setupPlayerControls(k2, player);
+  setupPlayerControls(k2);
   for (const e of level1.enemies) {
     createEnemy(k2, e.x, e.y, e.patrol);
   }
@@ -4338,20 +4363,22 @@ function winScene(k2, data = {}) {
   playSound(k2, "win");
   spawnConfetti(k2, GAME.width, GAME.height, 4);
   const panelH = 160 + BIRTHDAY_MESSAGE.lines.length * 32;
-  addPanel(k2, k2.center().x - 260, 40, 520, panelH);
-  addTitle(k2, "Parabens!", 55);
-  addBodyText(k2, BIRTHDAY_MESSAGE.title, 105, {
+  const panelY = (GAME.height - panelH) / 2 - 20;
+  const cx = k2.center().x;
+  addPanel(k2, cx - 260, panelY, 520, panelH);
+  addTitle(k2, "Parabens!", panelY + 15);
+  addBodyText(k2, BIRTHDAY_MESSAGE.title, panelY + 65, {
     size: 26,
     color: UI.accent
   });
   BIRTHDAY_MESSAGE.lines.forEach((line, i2) => {
-    addBodyText(k2, line, 150 + i2 * 32, { color: UI.text });
+    addBodyText(k2, line, panelY + 110 + i2 * 32, { color: UI.text });
   });
-  const coinY = 150 + BIRTHDAY_MESSAGE.lines.length * 32 + 16;
+  const coinY = panelY + 110 + BIRTHDAY_MESSAGE.lines.length * 32 + 16;
   addIconLabel(k2, {
     frame: TILE.coin,
     text: `Moedas coletadas: ${coins}`,
-    x: k2.center().x,
+    x: cx,
     y: coinY,
     centerX: true,
     iconScale: 1.4,
@@ -4359,30 +4386,95 @@ function winScene(k2, data = {}) {
     color: UI.coin,
     z: 2
   });
-  addBodyText(k2, "Pressione ESPACO para jogar de novo", GAME.height - 50, {
-    size: UI.smallSize
+  addBodyText(k2, "ESPACO ou toque na tela para jogar de novo", GAME.height - 50, {
+    size: UI.smallSize,
+    width: 500
   });
-  k2.onKeyPress("space", () => {
-    k2.go("menu");
-  });
+  const back = () => k2.go("menu");
+  k2.onKeyPress("space", back);
+  k2.onClick(back);
 }
 function gameoverScene(k2) {
-  addPanel(k2, k2.center().x - 210, 110, 420, 210);
-  addTitle(k2, "Quase la!", 135);
-  addBodyText(k2, "Nao desista — tente de novo!", 200, {
+  const panelH = 210;
+  const panelY = (GAME.height - panelH) / 2;
+  const cx = k2.center().x;
+  addPanel(k2, cx - 210, panelY, 420, panelH);
+  addTitle(k2, "Quase la!", panelY + 25);
+  addBodyText(k2, "Nao desista — tente de novo!", panelY + 90, {
     size: UI.subtitleSize,
     color: UI.text
   });
-  addBodyText(k2, "Pressione ESPACO para voltar ao menu", 260, {
-    size: UI.bodySize
+  addBodyText(k2, "ESPACO ou toque na tela para voltar ao menu", panelY + 150, {
+    size: UI.bodySize,
+    width: 380
   });
-  k2.onKeyPress("space", () => {
-    k2.go("menu");
-  });
+  const back = () => k2.go("menu");
+  k2.onKeyPress("space", back);
+  k2.onClick(back);
+}
+function isMobileUi() {
+  if (typeof window === "undefined") return false;
+  const narrow = window.innerWidth <= 900 || window.matchMedia("(max-width: 900px)").matches;
+  const touchPhone = navigator.maxTouchPoints > 0 && window.matchMedia("(pointer: coarse)").matches;
+  return narrow || touchPhone;
+}
+function bindHold(button, key) {
+  const set = (down) => {
+    input[key] = down;
+    button.classList.toggle("is-active", down);
+  };
+  const onDown = (event) => {
+    event.preventDefault();
+    set(true);
+  };
+  const onUp = (event) => {
+    event.preventDefault();
+    set(false);
+  };
+  button.addEventListener("pointerdown", onDown);
+  button.addEventListener("pointerup", onUp);
+  button.addEventListener("pointerleave", onUp);
+  button.addEventListener("pointercancel", onUp);
+}
+function setupTouchControls() {
+  const bar = document.getElementById("touch-bar");
+  if (!bar) return;
+  const left = bar.querySelector('[data-dir="left"]');
+  const right = bar.querySelector('[data-dir="right"]');
+  const jump = bar.querySelector('[data-action="jump"]');
+  if (left) bindHold(left, "left");
+  if (right) bindHold(right, "right");
+  if (jump) {
+    jump.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      input.jump = true;
+      jump.classList.add("is-active");
+    });
+    const clearJump = (event) => {
+      event.preventDefault();
+      jump.classList.remove("is-active");
+    };
+    jump.addEventListener("pointerup", clearJump);
+    jump.addEventListener("pointerleave", clearJump);
+    jump.addEventListener("pointercancel", clearJump);
+  }
+}
+const root = document.querySelector("#game-root");
+setupTouchControls();
+void (root == null ? void 0 : root.offsetHeight);
+const rw = Math.max((root == null ? void 0 : root.clientWidth) || window.innerWidth, 1);
+const rh = Math.max((root == null ? void 0 : root.clientHeight) || window.innerHeight, 1);
+const mobile = isMobileUi();
+if (mobile) {
+  GAME.height = Math.max(450, Math.round(GAME.width * rh / rw));
+} else {
+  GAME.width = 800;
+  GAME.height = 450;
 }
 const k = zo({
   width: GAME.width,
   height: GAME.height,
+  root,
   stretch: true,
   letterbox: true,
   background: COLORS.sky,
