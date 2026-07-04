@@ -3797,7 +3797,7 @@ function addIconLabel(k2, opts) {
 }
 function menuScene(k2) {
   const cx = k2.center().x;
-  const panelH = 320;
+  const panelH = 280;
   const panelY = (GAME.height - panelH) / 2;
   addPanel(k2, cx - 230, panelY, 460, panelH);
   addTitle(k2, "SUPER BRUNO BROS.", panelY + 25);
@@ -3813,13 +3813,9 @@ function menuScene(k2) {
     k2.fixed(),
     k2.z(2)
   ]);
-  addBodyText(k2, "ESPACO ou toque na tela para comecar", panelY + 210, {
+  addBodyText(k2, "ESPACO ou toque na tela para comecar", panelY + 220, {
     size: UI.subtitleSize,
     color: UI.text,
-    width: 400
-  });
-  addBodyText(k2, "<- -> ou A D para mover  |  ESPACO para pular", panelY + 250, {
-    size: UI.smallSize,
     width: 400
   });
   const start = () => k2.go("game");
