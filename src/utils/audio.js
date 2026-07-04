@@ -27,10 +27,6 @@ function beep(frequency, duration, volume = 0.2, type = "square") {
   }
 }
 
-export function loadSounds() {
-  // Sons gerados via Web Audio — não bloqueiam o carregamento do jogo
-}
-
 export function playSound(_k, name) {
   switch (name) {
     case "jump":

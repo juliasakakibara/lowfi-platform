@@ -11,13 +11,6 @@ export const GAME = {
 
 export const COLORS = {
   sky: [135, 206, 235],
-  ground: [76, 153, 0],
-  platform: [56, 128, 0],
-  player: [30, 30, 30],
-  enemy: [200, 50, 50],
-  coin: [255, 215, 0],
-  flag: [255, 255, 255],
-  flagPole: [180, 180, 180],
 };
 
 export const BIRTHDAY_MESSAGE = {
