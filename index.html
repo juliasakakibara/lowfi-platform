@@ -39,13 +39,21 @@
       }
       #game-root canvas {
         display: block;
-        /* Kaboom define o tamanho (letterbox); não forçar 100%×100% */
         max-width: 100%;
         max-height: 100%;
         touch-action: none;
         user-select: none;
         -webkit-user-select: none;
       }
+
+      /* Desktop: área do jogo em largura total; Kaboom letterbox escala 800×450 sem distorcer */
+      @media (min-width: 901px) {
+        #app,
+        #game-root {
+          width: 100%;
+        }
+      }
+
       #touch-bar {
         display: none;
         flex-shrink: 0;
@@ -58,12 +66,13 @@
         background: rgba(255, 255, 255, 0.92);
         border-top: 2px solid #282832;
       }
-      /* CSS puro — mais confiável que JS no DevTools device mode */
+      /* Mobile / DevTools: barra de toque */
       @media (max-width: 900px), (hover: none) and (pointer: coarse) {
         #touch-bar {
           display: flex;
         }
       }
+
 
       #touch-bar .touch-dirs {
         display: flex;

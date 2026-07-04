@@ -5,7 +5,7 @@ import { menuScene } from "./scenes/menu.js";
 import { gameScene } from "./scenes/game.js";
 import { winScene } from "./scenes/win.js";
 import { gameoverScene } from "./scenes/gameover.js";
-import { setupTouchControls } from "./ui/touchControls.js";
+import { isMobileUi, setupTouchControls } from "./ui/touchControls.js";
 
 const root = document.querySelector("#game-root");
 
@@ -15,15 +15,22 @@ void root?.offsetHeight;
 
 const rw = Math.max(root?.clientWidth || window.innerWidth, 1);
 const rh = Math.max(root?.clientHeight || window.innerHeight, 1);
-// Mesma proporção do host → letterbox preenche sem barras nem distorção
-GAME.height = Math.max(450, Math.round((GAME.width * rh) / rw));
+const mobile = isMobileUi();
+
+if (mobile) {
+  // Mobile: proporção do host (céu alto, chão embaixo)
+  GAME.height = Math.max(450, Math.round((GAME.width * rh) / rw));
+} else {
+  // Desktop: 16:9 fixo — letterbox escala pela largura (100% width, sem distorcer)
+  GAME.width = 800;
+  GAME.height = 450;
+}
 
 const k = kaboom({
   width: GAME.width,
   height: GAME.height,
   root,
   stretch: true,
-  // letterbox preserva pixels; altura dinâmica evita faixa minúscula
   letterbox: true,
   background: COLORS.sky,
   global: false,
