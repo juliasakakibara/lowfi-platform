@@ -48,9 +48,14 @@ export function createPlayer(k, x, y) {
       if (player.curAnim() !== "walk") {
         player.play("walk");
       }
-    } else if (player.curAnim() !== "idle") {
-      player.play("idle");
+    } else {
+      // move() só aplica vel enquanto há input — sem isso o personagem desliza sem parar
+      player.vel.x = 0;
+      if (player.curAnim() !== "idle") {
+        player.play("idle");
+      }
     }
+
 
     if (input.jump) {
       input.jump = false;

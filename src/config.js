@@ -11,22 +11,22 @@ export const GAME = {
 
 export const COLORS = {
   sky: [135, 206, 235],
-  ground: [76, 153, 0],
-  platform: [56, 128, 0],
-  player: [30, 30, 30],
-  enemy: [200, 50, 50],
-  coin: [255, 215, 0],
-  flag: [255, 255, 255],
-  flagPole: [180, 180, 180],
 };
 
-export const BIRTHDAY_MESSAGE = {
-  title: "Feliz aniversário, xuxu!!",
-  lines: [
-    "A surpresa te espera no sábado às 19h!",
-    "Te amo ♥",
-  ],
-};
+// Payload ofuscado (base64) — não impede alguém determinado, mas evita spoiler casual no Sources
+const BIRTHDAY_PAYLOAD =
+  "eyJ0aXRsZSI6IkZlbGl6IGFuaXZlcnPDoXJpbywgeHV4dSEhIiwibGluZXMiOlsiQSBzdXJwcmVzYSB0ZSBlc3BlcmEgbm8gc8OhYmFkbyDDoHMgMTloISIsIlRlIGFtbyDimaUiXX0=";
+
+export function getBirthdayMessage() {
+  try {
+    const json = new TextDecoder().decode(
+      Uint8Array.from(atob(BIRTHDAY_PAYLOAD), (c) => c.charCodeAt(0)),
+    );
+    return JSON.parse(json);
+  } catch {
+    return { title: "Parabéns!", lines: [] };
+  }
+}
 
 export const ASSETS = {
   useCustomFlag: false,

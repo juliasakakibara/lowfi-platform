@@ -65,3 +65,23 @@ if (k.canvas) {
   k.canvas.focus();
   k.canvas.addEventListener("click", () => k.canvas.focus());
 }
+
+// Rotação / resize grande: recarrega para recalcular GAME.height e layout
+const bootW = window.innerWidth;
+const bootH = window.innerHeight;
+window.addEventListener("orientationchange", () => {
+  setTimeout(() => window.location.reload(), 150);
+});
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (
+      Math.abs(window.innerWidth - bootW) > 80
+      || Math.abs(window.innerHeight - bootH) > 80
+    ) {
+      window.location.reload();
+    }
+  }, 300);
+});
+

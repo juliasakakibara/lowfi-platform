@@ -1,6 +1,6 @@
-# Stick Man Run — Jogo de Aniversário
+# SUPER BRUNO BROS.
 
-Jogo de plataforma 2D feito com [Kaboom.js](https://kaboomjs.com/) e Vite. O stick man desvia de inimigos, coleta moedas e chega na bandeirinha para revelar a mensagem de aniversário.
+Jogo de plataforma 2D feito com [Kaboom.js](https://kaboomjs.com/) e Vite. O Bruno desvia de inimigos, coleta moedas e chega na bandeirinha para revelar a mensagem de aniversário.
 
 ## Desenvolvimento
 
@@ -23,10 +23,11 @@ Coloque suas imagens em `public/assets/custom/`:
 
 | Arquivo | Uso |
 |---------|-----|
+| `bruno.png` | Personagem principal (sheet 4 frames) |
 | `flag-surprise.png` | Bandeira no fim da fase |
 | `menu-banner.png` | Banner no menu inicial |
 
-Ative em [`src/config.js`](src/config.js):
+Ative bandeira/banner em [`src/config.js`](src/config.js):
 
 ```js
 export const ASSETS = {
@@ -41,32 +42,15 @@ export const ASSETS = {
 - [`src/level/level1.js`](src/level/level1.js) — plataformas, inimigos, moedas, bandeira
 - [`src/config.js`](src/config.js) — velocidade, pulo, vidas
 
-### Regenerar sprites padrão
-
-Os sprites pixel art são gerados automaticamente no build. Para regerar manualmente:
-
-```bash
-node scripts/generate-assets.js
-node scripts/copy-kenney.js
-```
-
 ### Assets (Kenney Pixel Platformer)
 
 O jogo usa o [Kenney Pixel Platformer](https://kenney.nl/assets/pixel-platformer) (CC0), em `public/assets/pixel-platformer/`.
 
-- **Grade:** 18×18 px por tile
-- **Plataformas:** cada tile é sprite + colisão no mesmo objeto (`anchor: topleft`)
-- **Nível:** `x` e `y` em múltiplos de 18 em [`src/level/level1.js`](src/level/level1.js)
-
-Para atualizar os PNGs a partir do pack em `~/Downloads/kenney_pixel-platformer`:
+Os PNGs devem estar commitados. Para atualizar a partir do pack em `~/Downloads/kenney_pixel-platformer`:
 
 ```bash
-node scripts/copy-pixel-platformer.js
+npm run copy-assets
 ```
-
-Os PNGs em `public/assets/pixel-platformer/` devem estar commitados (CI não tem a pasta Downloads).
-
-**Checkpoint estável (formas básicas):** branch `fix/deploy-workflow-actions`, commit `checkpoint: jogo estável com formas básicas`.
 
 ## Build
 
@@ -75,25 +59,36 @@ npm run build
 npm run preview
 ```
 
-## Deploy (GitHub Pages)
+A saída vai para `docs/` (com `minify: false` — o minify do esbuild quebra o Kaboom).
 
-O site publicado fica na pasta `docs/` (sem GitHub Actions — a conta está com Actions bloqueado por billing).
+## Deploy (GitHub Pages)
 
 **Link do jogo:** https://juliasakakibara.github.io/lowfi-platform/
 
-Em **Settings → Pages**: Source = **Deploy from a branch**, Branch = **main**, pasta = **/docs**.
+O site publicado fica na pasta `docs/` e na branch `gh-pages` (sem GitHub Actions — a conta está com Actions bloqueado por billing).
 
-Para republicar depois de mudar o código:
+Em **Settings → Pages**: Source = **Deploy from a branch**, Branch = **gh-pages**, pasta = **/ (root)**.
+
+Para republicar:
 
 ```bash
 npm run build
+touch docs/.nojekyll
 git add docs
 git commit -m "deploy: atualiza GitHub Pages"
-git push
+git push origin main
+git subtree split --prefix docs -b gh-pages-split
+git push origin gh-pages-split:gh-pages --force
+git branch -D gh-pages-split
 ```
 
 ## Controles
 
+**Desktop**
+
 - **← →** ou **A D** — mover
 - **Espaço**, **↑** ou **W** — pular
-- Pular em cima do inimigo elimina ele (estilo Mario)
+
+**Mobile** (viewport estreita): barra com **&lt;** **&gt;** e **Pular** abaixo do canvas.
+
+Pular em cima do inimigo elimina ele (estilo Mario).

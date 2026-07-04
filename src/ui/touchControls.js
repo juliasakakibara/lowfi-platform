@@ -1,15 +1,16 @@
-import { input } from "../input.js";
+import { input, resetInput } from "../input.js";
 
-/** Viewport estreita ou dispositivo touch real (não só trackpad). */
+/** Alinhado ao CSS da #touch-bar: max-width 900px ou hover:none + pointer:coarse */
 export function isMobileUi() {
   if (typeof window === "undefined") return false;
   const narrow =
     window.innerWidth <= 900 || window.matchMedia("(max-width: 900px)").matches;
-  const touchPhone =
-    navigator.maxTouchPoints > 0 &&
-    window.matchMedia("(pointer: coarse)").matches;
-  return narrow || touchPhone;
+  const coarseTouch =
+    window.matchMedia("(hover: none)").matches
+    && window.matchMedia("(pointer: coarse)").matches;
+  return narrow || coarseTouch;
 }
+
 
 function bindHold(button, key) {
   const set = (down) => {
@@ -19,6 +20,7 @@ function bindHold(button, key) {
 
   const onDown = (event) => {
     event.preventDefault();
+    button.blur();
     set(true);
   };
   const onUp = (event) => {
@@ -30,6 +32,8 @@ function bindHold(button, key) {
   button.addEventListener("pointerup", onUp);
   button.addEventListener("pointerleave", onUp);
   button.addEventListener("pointercancel", onUp);
+  // Evita que o botão roube foco do canvas (setas “presas” no Kaboom)
+  button.setAttribute("tabindex", "-1");
 }
 
 /**
@@ -48,8 +52,10 @@ export function setupTouchControls() {
   if (right) bindHold(right, "right");
 
   if (jump) {
+    jump.setAttribute("tabindex", "-1");
     jump.addEventListener("pointerdown", (event) => {
       event.preventDefault();
+      jump.blur();
       input.jump = true;
       jump.classList.add("is-active");
     });
@@ -61,4 +67,13 @@ export function setupTouchControls() {
     jump.addEventListener("pointerleave", clearJump);
     jump.addEventListener("pointercancel", clearJump);
   }
+
+  // Soltar o dedo fora do botão ou perder foco da janela não deixa input preso
+  window.addEventListener("pointerup", () => {
+    input.left = false;
+    input.right = false;
+    left?.classList.remove("is-active");
+    right?.classList.remove("is-active");
+  });
+  window.addEventListener("blur", resetInput);
 }

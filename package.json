@@ -1,20 +1,17 @@
 {
-  "name": "stick-man-birthday-game",
+  "name": "super-bruno-bros",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/generate-sounds.js && node scripts/copy-pixel-platformer.js",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "copy-assets": "node scripts/copy-pixel-platformer.js"
   },
   "dependencies": {
     "kaboom": "^3000.1.17",
     "vite": "^6.3.5"
-  },
-  "devDependencies": {
-    "pngjs": "^7.0.0"
   },
   "engines": {
     "node": ">=18"

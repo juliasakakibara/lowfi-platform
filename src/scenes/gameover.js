@@ -1,6 +1,6 @@
 import { GAME } from "../config.js";
 import { UI } from "../ui/theme.js";
-import { addPanel, addTitle, addBodyText } from "../ui/panel.js";
+import { addPanel, addTitle, addBodyText, addActionHint } from "../ui/panel.js";
 
 export function gameoverScene(k) {
   const panelH = 210;
@@ -9,17 +9,15 @@ export function gameoverScene(k) {
 
   addPanel(k, cx - 210, panelY, 420, panelH);
 
-  addTitle(k, "Quase la!", panelY + 25);
-  addBodyText(k, "Nao desista — tente de novo!", panelY + 90, {
+  addTitle(k, "Quase lá!", panelY + 25);
+  addBodyText(k, "Não desista — tente de novo!", panelY + 90, {
     size: UI.subtitleSize,
     color: UI.text,
   });
-  addBodyText(k, "ESPACO ou toque na tela para voltar ao menu", panelY + 150, {
+
+  const back = () => k.go("menu");
+  addActionHint(k, "ESPAÇO ou toque aqui para voltar ao menu", panelY + 150, back, {
     size: UI.bodySize,
     width: 380,
   });
-
-  const back = () => k.go("menu");
-  k.onKeyPress("space", back);
-  k.onClick(back);
 }

@@ -1,7 +1,6 @@
 import {
   TILE_SIZE,
   PLATFORM_ROWS,
-  PLATFORM_HEIGHT,
   pickPlatformTile,
 } from "./tiles.js";
 
@@ -36,5 +35,3 @@ export function spawnGround(k, segments) {
     }
   }
 }
-
-export { PLATFORM_HEIGHT, TILE_SIZE };

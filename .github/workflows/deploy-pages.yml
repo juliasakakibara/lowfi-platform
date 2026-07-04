@@ -1,5 +1,0 @@
-# Desativado: a conta GitHub está com Actions bloqueado por billing.
-# O deploy usa a pasta docs/ commitada em main (Settings → Pages → /docs).
-#
-# Para republicar após mudanças:
-#   npm run build && git add docs && git commit -m "deploy" && git push

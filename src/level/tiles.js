@@ -4,7 +4,7 @@ import { GAME } from "../config.js";
 export const TILE_SIZE = 18;
 
 export const PLATFORM_ROWS = 1;
-export const PLATFORM_HEIGHT = PLATFORM_ROWS * TILE_SIZE;
+
 
 /** Chão na base do canvas (altura lógica pode mudar por dispositivo). */
 export function groundY() {
@@ -26,11 +26,11 @@ export const TILE = {
   heart: 44,
 };
 
-/** Frames na sheet de characters */
+/** Frames na sheet de characters (inimigos; player usa sprite "bruno") */
 export const CHAR = {
-  player: 0,
   enemy: 9,
 };
+
 
 export function pickPlatformTile(col, cols) {
   if (cols === 1) return TILE.grassMid;

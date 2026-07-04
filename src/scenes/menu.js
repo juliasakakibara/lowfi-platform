@@ -1,10 +1,10 @@
 import { ASSETS, GAME } from "../config.js";
 import { UI } from "../ui/theme.js";
-import { addPanel, addTitle, addBodyText } from "../ui/panel.js";
+import { addPanel, addTitle, addBodyText, addActionHint } from "../ui/panel.js";
 
 export function menuScene(k) {
   const cx = k.center().x;
-  const panelH = 320;
+  const panelH = 280;
   const panelY = (GAME.height - panelH) / 2;
 
   addPanel(k, cx - 230, panelY, 460, panelH);
@@ -35,17 +35,10 @@ export function menuScene(k) {
     k.z(2),
   ]);
 
-  addBodyText(k, "ESPACO ou toque na tela para comecar", panelY + 210, {
+  const start = () => k.go("game");
+  addActionHint(k, "ESPAÇO ou toque aqui para começar", panelY + 220, start, {
     size: UI.subtitleSize,
     color: UI.text,
     width: 400,
   });
-  addBodyText(k, "<- -> ou A D para mover  |  ESPACO para pular", panelY + 250, {
-    size: UI.smallSize,
-    width: 400,
-  });
-
-  const start = () => k.go("game");
-  k.onKeyPress("space", start);
-  k.onClick(start);
 }

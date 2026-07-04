@@ -140,11 +140,12 @@ export function gameScene(k) {
 
     if (isStomping(player, enemy)) {
       player.jump(GAME.jumpForce * 0.85);
-      playSound(k, "coin");
+      playSound(k, "stomp");
       spawnStompDust(k, enemy.pos);
       enemy.destroy();
       return;
     }
+
 
     if (!shouldDamagePlayer(player, enemy)) return;
     handlePlayerHit(enemy);
@@ -166,9 +167,12 @@ export function gameScene(k) {
     );
     k.camPos(targetX, GAME.height / 2);
 
+    // Queda no buraco: só respawna (não gasta vida)
     if (player.pos.y > GAME.height + 100) {
-      handlePlayerHit({ pos: { x: player.pos.x } });
       player.pos = k.vec2(startX, startY);
+      player.vel.x = 0;
+      player.vel.y = 0;
     }
+
   });
 }
